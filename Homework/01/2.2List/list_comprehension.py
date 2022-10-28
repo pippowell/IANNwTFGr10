@@ -3,3 +3,6 @@ list = [x*x for x in range(100)]
 
 newlist = [x*x for x in range(100) if (x*x) % 2 == 0]
 #Then do it again, but only include those squares which are even numbers.
+
+print(list)
+print(newlist)
