@@ -9,7 +9,16 @@ def sigmoid(x):
 a, b, x, z = symbols("a, b, x, z", real = True) 
 f = 4*a*x**2 + a + 3 + sigmoid(z) + (sigmoid(b))**2
 
+derivx = diff(f, x)
+derivz = diff(f, z)
+deriva = diff(f, a)
+derivb = diff(f, b)
+
+nablaf = derivx + derivz + deriva + derivb
+
 print(diff(f, x))
 print(diff(f, z))
 print(diff(f, a))
 print(diff(f, b))
+print(nablaf)
+
