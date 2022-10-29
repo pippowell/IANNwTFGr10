@@ -1,18 +1,18 @@
 import numpy as np
 
 #create 5x5 numpy array with normally distributed numbers
-array = np.random.normal(loc = 0, scale = 1, size = (5,5))
+array = np.random.normal(loc = 0, scale = 1, size = (5, 5))
 print('The original array: ')
 print(array)
 
 #if the value of an entry is > 0.09, replace that entry with its square, else with 42
-updatedarray = np.where(array>0.09,array*array,42)
+updatedarray = np.where(array>0.09, array*array, 42)
 print('The updated array: ')
 print(updatedarray)
 
 #print just the fourth column of the array
 print('The fourth column (column index 3) of the updated array: ')
-print(updatedarray[:,3])
+print(updatedarray[:, 3])
 
 # Alternate Solution (No need to grade, just want to have it written down)
 # print("the array after step 1:")
