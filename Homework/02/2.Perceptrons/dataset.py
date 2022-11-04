@@ -17,9 +17,11 @@ print(t)
 index = range(0, 100)
 
 plt.title("Optional task")
-plt.plot(index, t, '.', color="green")
+plt.plot(index, x, '.', color="red", label='Output')
+plt.plot(index, t, '.', color="green", label='Target')
 
 plt.xlabel("Index")
 plt.ylabel("Target Value")
+plt.legend();
 
 plt.show()
