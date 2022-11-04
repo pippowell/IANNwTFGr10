@@ -1,0 +1,15 @@
+• What is the purpose of an activation function?
+Wooki: I think its purpose is to have a threshold which allows an activation under certain condition e.g. if the sum of all the activation of the prior neuron*their weights and bias > 1
+
+• How is the sigmoid function defined? What does it look like when plotted
+as a graph? What about ReLu?
+(mentioned in courseware)
+
+• What is the derivative of the sigmoid function? What is the derivative of
+ReLu?
+(mentioned in courseware)
+
+• Why would one choose sigmoid or ReLU over the step function when
+deciding on which activation function to use?
+Wooki: (from Stack exchange) The gradient of sigmoids becomes increasingly small as the absolute value of x increases. 
+The constant gradient of ReLUs results in faster learning.
