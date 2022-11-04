@@ -20,6 +20,6 @@ plt.title("Optional task")
 plt.plot(index, t, '.', color="green")
 
 plt.xlabel("Index")
-plt.ylabel("Value")
+plt.ylabel("Target Value")
 
 plt.show()
