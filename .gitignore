@@ -1,0 +1,8 @@
+# macOS Files
+.DS_Store
+
+# folder 
+.idea/
+
+# python files
+*.pyc
