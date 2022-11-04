@@ -8,12 +8,12 @@ def relu(x):
 def relu_derivative(x):
     return 1 if x > 0 else 0
 
-# assuming that the loss function is MSE
-def loss(target, ouput): 
-    return 0.5*(target - ouput)^2
+# the loss function is MSE (as mentioned in 2.4)
+def loss(ouput, target): 
+    return 0.5*(ouput - target)**2
 
 # loss derivative w.r.t. output(activation) i.e. ∂L/∂activation
-def loss_derivative(target, ouput):
+def loss_derivative(ouput, target):
     return ouput - target
 
 class Layer: 
@@ -47,7 +47,7 @@ class Layer:
         self.layer_activation = self.output
 
         # ∂L/∂activation must be obtained from layer l+1 (or directly from the loss function derivative if l is the output layer).
-        L_derivative_bzg_activation = loss_derivative(dataset.t, self.ouput)
+        L_derivative_bzg_activation = loss_derivative(self.ouput, dataset.t)
 
         # gradient w.r.t. weight
         gradient_weight = np.transpose(self.layer_input)*np.multiply(relu_derivative(self.layer_preactivation), L_derivative_bzg_activation)
@@ -69,4 +69,14 @@ class Layer:
         # bias vector
         self.bias_vector = self.bias_vector - h*gradient_bias_vector
 
+class MLP:
+
+    # combines instances of your Layer class into into class MLP
+    def __init__(self, n_units: int, input_units: int):
+        super().__init__(n_units, input_units)
+
+    # A forward_step method which passes an input through the entire network
+
+    
+    # A backpropagation method which updates all the weights and biases in the network given a loss value
 
