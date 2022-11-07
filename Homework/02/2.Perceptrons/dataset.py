@@ -18,9 +18,9 @@ for element_x in range(0, len(x)):
     t.append(element_t)
 print(t)
 
-#Alternative - not sure if works
-#test = x**3-x**2
-#print(test)
+#Alternative
+#t = (x**3) - (x**2)
+#print(t)
 
 # Optional: Plot your data points along with the underlying function which generated them. 
 # Wooki: not sure what they mean by "along with the underlying function which generated them"
