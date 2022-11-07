@@ -33,6 +33,7 @@ class Layer:
 
     # 2. A method called ’forward_step’, which returns each unit’s activation (i.e. output) using ReLu as the activation function.
     def forward_step(self):
+        self.layer_input = #?
         self.layer_preactivation = np.dot(self.layer_input, self.weight_matrix)
         self.layer_activation = relu(np.dot(self.layer_input, self.weight_matrix) + self.bias_vector)
         return self.layer_activation
@@ -68,6 +69,12 @@ class MLP:
     # combines instances of your Layer class into class MLP
     def __init__(self, n_hidden_layers: int, size_hl: int, input: array, n_output: int):
         super().__init__(n_units, input_units)
+
+    def forward_propogation(self):
+
+        return loss
+
+    def backward_propogation(self, loss):
 
     # create input layer based on 'input' variable
 
