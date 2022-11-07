@@ -45,24 +45,24 @@ class Layer:
         deriv_loss_activ = loss_derivative(self.layer_activation, dataset.t)
 
         # gradient w.r.t. weight
-        gradient_weight = np.dot(np.transpose(self.layer_input),np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ))
+        deriv_loss_weight = np.transpose(self.layer_input)@(np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ))
 
         # gradient w.r.t. bias vector
-        gradient_bias_vector = np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ)
+        deriv_loss_bias = np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ)
 
         # It makes sense to store layer activations, pre-activations and layer input in attributes 
         # when doing the forward computation of a layer.
 
         # gradient w.r.t. input
-        gradient_input = np.dot((relu_derivative(self.layer_preactivation)*deriv_loss_activ),np.transpose(self.weight_matrix))
+        deriv_loss_input = np.multiply(relu_derivative(self.layer_preactivation),deriv_loss_activ)@np.transpose(self.weight_matrix)
 
         h = 0.01 # learning rate (smaller than 0.05)
         # update parameters: 
         # weight matrix
-        self.weight_matrix = self.weight_matrix - h*gradient_weight
+        self.weight_matrix = self.weight_matrix - h*deriv_loss_weight
 
         # bias vector
-        self.bias_vector = self.bias_vector - h*gradient_bias_vector
+        self.bias_vector = self.bias_vector - h*deriv_loss_bias
 
 class MLP:
 
