@@ -23,7 +23,7 @@ class Layer:
 
         #  Instantiate a bias vector and a weight matrix of shape (n inputs, n units). 
         #  Use random values for the weights and zeros for the biases.
-        self.bias_vector = np.zeros(input_units)
+        self.bias_vector = np.zeros(n_units)
         self.weight_matrix = np.random.random((input_units, n_units))
 
         # instantiate empty attributes for layer input, layer preactivation and layer activation
