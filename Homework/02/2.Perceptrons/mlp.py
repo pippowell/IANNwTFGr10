@@ -66,16 +66,16 @@ class Layer:
 class MLP:
 
     # combines instances of your Layer class into class MLP
-    def __init__(self, n_layers: int, input: array, n_output: int):
+    def __init__(self, n_hidden_layers: int, size_hl: int, input: array, n_output: int):
         super().__init__(n_units, input_units)
 
     # create input layer based on 'input' variable
 
-    # create hidden layers for i in n_layers
+    # create hidden layers for i in n_hidden_layers
 
     # create an output layer with size 'n_output'
 
-    # return error
+    # return output
 
 
 
