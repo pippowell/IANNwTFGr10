@@ -8,18 +8,18 @@ def relu_derivative(x):
     return 1 if x > 0 else 0
 
 # the loss function is MSE (as mentioned in 2.4)
-def loss(ouput, target): 
-    return 0.5*(ouput - target)**2
+def loss(output, target):
+    return 0.5*(output - target)**2
 
 # loss derivative w.r.t. output(activation) i.e. ∂L/∂activation
-def loss_derivative(ouput, target):
-    return ouput - target
+def loss_derivative(output, target):
+    return output - target
 
 class Layer: 
     
     # an integer argument ’n_units’, indicating the number of units in the layer, 
     # an integer argument ’input_units’, indicating the number of units in the preceding layer
-    def __init__(self, n_units: int, input_units: int):
+    def __init__(self, input_units: int, n_units: int):
 
         #  Instantiate a bias vector and a weight matrix of shape (n inputs, n units). 
         #  Use random values for the weights and zeros for the biases.
@@ -33,32 +33,27 @@ class Layer:
 
     # 2. A method called ’forward_step’, which returns each unit’s activation (i.e. output) using ReLu as the activation function.
     def forward_step(self):
-        self.output = relu(np.dot(self.layer_input, self.weight_matrix) + self.bias_vector)
-        return self.output 
+        self.layer_preactivation = np.dot(self.layer_input, self.weight_matrix)
+        self.layer_activation = relu(np.dot(self.layer_input, self.weight_matrix) + self.bias_vector)
+        return self.layer_activation
 
     # A method called backward_step, which updates each unit’s parameters (i.e. weights and bias).
-    def backward_step(self): 
-
-        # pre-activation is the output of the layer’s matrix multiplication
-        self.layer_preactivation = self.layer_input*self.weight_matrix
-
-        # activation is the output of the layer’s activation function
-        self.layer_activation = self.output
+    def backward_step(self):
 
         # ∂L/∂activation must be obtained from layer l+1 (or directly from the loss function derivative if l is the output layer).
-        L_derivative_bzg_activation = loss_derivative(self.ouput, dataset.t)
+        deriv_loss_activ = loss_derivative(self.layer_activation, dataset.t)
 
         # gradient w.r.t. weight
-        gradient_weight = np.transpose(self.layer_input)*np.multiply(relu_derivative(self.layer_preactivation), L_derivative_bzg_activation)
+        gradient_weight = np.dot(np.transpose(self.layer_input),np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ))
 
         # gradient w.r.t. bias vector
-        gradient_bias_vector = np.multiply(relu_derivative(self.layer_preactivation), L_derivative_bzg_activation)
+        gradient_bias_vector = np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ)
 
         # It makes sense to store layer activations, pre-activations and layer input in attributes 
         # when doing the forward computation of a layer.
 
         # gradient w.r.t. input
-        gradient_input = np.multiply(relu_derivative(self.layer_preactivation), L_derivative_bzg_activation)*np.transpose(self.weight_matrix)
+        gradient_input = np.dot((relu_derivative(self.layer_preactivation)*deriv_loss_activ),np.transpose(self.weight_matrix))
 
         h = 0.01 # learning rate (smaller than 0.05)
         # update parameters: 
@@ -70,9 +65,20 @@ class Layer:
 
 class MLP:
 
-    # combines instances of your Layer class into into class MLP
-    def __init__(self, n_units: int, input_units: int):
+    # combines instances of your Layer class into class MLP
+    def __init__(self, n_layers: int, input: array, n_output: int):
         super().__init__(n_units, input_units)
+
+    # create input layer based on 'input' variable
+
+    # create hidden layers for i in n_layers
+
+    # create an output layer with size 'n_output'
+
+    # return error
+
+
+
 
     # A forward_step method which passes an input through the entire network
 
