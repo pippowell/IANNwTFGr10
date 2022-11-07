@@ -11,6 +11,7 @@ print(x)
 # x = np.random.randn(100)
 
 # # 2. Create an array ’t’. For each entry x[i] in x, calculate x[i]**3-x[i]**2 and save the results to t[i]. These are your targets.
+# Note - adding one to end of function to account for ReLU not being able to model functions with values less than 0 (negative numbers) as ReLU does not have negative values.
 t = (x**3) - (x**2) + 1
 #print(t)
 
