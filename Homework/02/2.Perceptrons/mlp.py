@@ -79,7 +79,7 @@ class MLP:
             if i == 1:
                 layer = Layer(input_size,size_hl)
                 self.layers.append(layer)
-            if i != (n_hidden_layers+1):
+            if i != (n_hidden_layers+1) and i !=1:
                 layer = Layer(size_hl,size_hl)
                 self.layers.append(layer)
             else:
