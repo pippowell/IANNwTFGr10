@@ -19,7 +19,7 @@ class Layer:
     
     # an integer argument ’n_units’, indicating the number of units in the layer, 
     # an integer argument ’input_units’, indicating the number of units in the preceding layer
-    def __init__(self, input_units: int, n_units: int):
+    def __init__(self, input_units: int, n_units: int, input: array, loss: int):
 
         #  Instantiate a bias vector and a weight matrix of shape (n inputs, n units). 
         #  Use random values for the weights and zeros for the biases.
@@ -27,22 +27,22 @@ class Layer:
         self.weight_matrix = np.random.random((input_units, n_units))
 
         # instantiate empty attributes for layer input, layer preactivation and layer activation
-        self.layer_input = None
+        self.layer_input = input
         self.layer_preactivation = None
         self.layer_activation = None
+        self.loss = loss
 
     # 2. A method called ’forward_step’, which returns each unit’s activation (i.e. output) using ReLu as the activation function.
-    def forward_step(self):
-        self.layer_input = #?
+    def forward_step(self, self.layer_input):
         self.layer_preactivation = np.dot(self.layer_input, self.weight_matrix)
         self.layer_activation = relu(np.dot(self.layer_input, self.weight_matrix) + self.bias_vector)
         return self.layer_activation
 
     # A method called backward_step, which updates each unit’s parameters (i.e. weights and bias).
-    def backward_step(self):
+    def backward_step(self,self.loss):
 
         # ∂L/∂activation must be obtained from layer l+1 (or directly from the loss function derivative if l is the output layer).
-        deriv_loss_activ = loss_derivative(self.layer_activation, dataset.t)
+        deriv_loss_activ = loss_derivative(self.layer_activation,self.loss)
 
         # gradient w.r.t. weight
         deriv_loss_weight = np.transpose(self.layer_input)@(np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ))
@@ -67,28 +67,48 @@ class Layer:
 class MLP:
 
     # combines instances of your Layer class into class MLP
-    def __init__(self, n_hidden_layers: int, size_hl: int, input: array, n_output: int):
-        super().__init__(n_units, input_units)
+    def __init__(self, n_hidden_layers: int, size_hl: int, input: array, n_output: int, target: int):
+        #super().__init__(n_units, input_units)
+        self.layers = array(n_hidden_layers + 1, 1)
 
-    def forward_propogation(self):
+        input_size = np.numcol(input)
+
+        #create the network of desired number of hidden layers and desired size of input + output layers
+        #needs further work - what exactly is going into the layers matrix here needs attention
+        for i in range(n_hidden_layers+1):
+            if i == 1:
+                layer = Layer(input_size,size_hl)
+                self.layers.append(layer)
+            if i != (n_hidden_layers+1):
+                layer = Layer(size_hl,size_hl)
+                self.layers.append(layer)
+            else:
+                layer = Layer(size_hl,n_output)
+                self.layers.append(layer)
+
+    # forward propagation
+    # A forward_step method which passes an input through the entire network
+    def forward_propogation(self, input):
+
+        for i in range(n_hidden_layers + 1):
+
+            if i == 1:
+                input = input
+            #needs work - figure out how to call activation of previous layer properly
+            else:
+                input = self.layers[i-1]
+
+            current_layer = self.layers[i]
+            current_layer.Layer.forward_step(input)
+
+        loss = mlp.loss(self.layers[n_hidden_layers+1],target)
 
         return loss
 
+    # backward propagation
+    # A backpropagation method which updates all the weights and biases in the network given a loss value
     def backward_propogation(self, loss):
 
-    # create input layer based on 'input' variable
-
-    # create hidden layers for i in n_hidden_layers
-
-    # create an output layer with size 'n_output'
-
-    # return output
-
-
-
-
-    # A forward_step method which passes an input through the entire network
-
-    
-    # A backpropagation method which updates all the weights and biases in the network given a loss value
-
+        for i in reversed(range(n_hidden_layers+1)):
+            current_layer = self.layers[i]
+            current_layer.Layer.backward_step(loss)
