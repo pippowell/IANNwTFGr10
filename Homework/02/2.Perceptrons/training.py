@@ -13,11 +13,11 @@ while e < 1001:
     for i in range(len(dataset.x)):
         input = np.asarray(dataset.x[i])
         target = dataset.t[i]
-        net = mlp.MLP(1, 10, 1, 1)
-        net.forward_propogation(input,target)
+        net = mlp.MLP(1, 10, 1, 1) # (n_hidden_layers, size_hl, size_output, input_size)
+        net.forward_propagation(input, target)
         loss = mlp.loss
         losslist.append(loss)
-        net.backward_propogation(loss)
+        net.backward_propagation(loss)
 
     e = e + 1
 
