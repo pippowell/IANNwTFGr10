@@ -1,4 +1,3 @@
-import dataset
 import numpy as np
 
 def relu(x):
@@ -45,6 +44,7 @@ class Layer:
         self.loss = loss
 
         # ∂L/∂activation must be obtained from layer l+1 (or directly from the loss function derivative if l is the output layer).
+        # need to change this! as is only works on final layer!
         deriv_loss_activ = loss_derivative(self.layer_activation,self.loss)
 
         # gradient w.r.t. weight
