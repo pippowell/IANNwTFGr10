@@ -120,10 +120,13 @@ class MLP:
         for i in reversed(range(self.n_hidden_layers+1)):
 
             if i == self.n_hidden_layers:
-                deriv_loss_activ = loss_derivative(self.layer_activation, self.loss)
+                #check this!
+                deriv_loss_activ = loss_derivative(self.layer_activation, self.loss)*relu_derivative(self.layer_activation)
+                final_deriv_loss = deriv_loss_activ
 
             else:
-                #add this!
+                #correct this!
+                deriv_loss_activ = (final_deriv_loss*self.layer_activation)*relu_derivative(self.layer_activation)
 
             current_layer = self.layers[i]
             current_layer.backward_step(loss, deriv_loss_activ)
