@@ -62,50 +62,52 @@ class Layer:
         h = 0.01 # learning rate (smaller than 0.05)
         # update parameters: 
         # weight matrix
-        self.weight_matrix = self.weight_matrix - h*deriv_loss_weight
+        self.weight_matrix = self.weight_matrix - h * deriv_loss_weight
 
         # bias vector
-        self.bias_vector = self.bias_vector - h*deriv_loss_bias
+        self.bias_vector = self.bias_vector - h * deriv_loss_bias
 
 class MLP:
 
     # combines instances of your Layer class into class MLP
     def __init__(self, n_hidden_layers: int, size_hl: int, n_output: int, input_size: int):
 
-        super().__init__(n_units, input_units)
-
-        self.layers = ndarray(n_hidden_layers + 1, size_hl)
+        #super().__init__(n_units, input_units)
+        self.n_hidden_layers = n_hidden_layers
+        self.size_hl = size_hl
+        self.n_output = n_output
+        self.input_size = input_size
+        
+        self.layers = []
 
         #create the network of desired number of hidden layers and desired size of input + output layers
         #needs further work - what exactly is going into the layers matrix here needs attention
 
-        self.input_size = input_size
-
-        for i in range(n_hidden_layers+1):
+        for i in range(self.n_hidden_layers+1):
             if i == 1:
-                layer = Layer(input_size,size_hl)
+                layer = Layer(self.input_size,self.size_hl)
                 self.layers.append(layer)
             if i != (n_hidden_layers+1) and i !=1:
-                layer = Layer(size_hl,size_hl)
+                layer = Layer(self.size_hl,self.size_hl)
                 self.layers.append(layer)
             else:
-                layer = Layer(size_hl,n_output)
+                layer = Layer(self.size_hl,self.n_output)
                 self.layers.append(layer)
 
     # forward propagation
     # A forward_step method which passes an input through the entire network
     def forward_propogation(self, input, target):
 
-        for i in range(n_hidden_layers + 1):
+        for i in range(self.n_hidden_layers + 1):
 
             if i == 1:
                 input = input
             #needs work - figure out how to call activation of previous layer properly
             else:
-                input = self.layers[i-1]
+                input = self.layers[i-1].layer_activation
 
             current_layer = self.layers[i]
-            current_layer.Layer.forward_step(input)
+            current_layer.forward_step(input)
 
         loss = mlp.loss(self.layers[n_hidden_layers+1],target)
 
@@ -115,6 +117,6 @@ class MLP:
     # A backpropagation method which updates all the weights and biases in the network given a loss value
     def backward_propogation(self, loss):
 
-        for i in reversed(range(n_hidden_layers+1)):
+        for i in reversed(range(self.n_hidden_layers+1)):
             current_layer = self.layers[i]
-            current_layer.Layer.backward_step(loss)
+            current_layer.backward_step(loss)
