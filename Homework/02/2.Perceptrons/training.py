@@ -9,7 +9,7 @@ losslist = []
 while e < 1001:
 
     for i in dataset.x:
-        input = array(dataset.x[i])
+        input = ndarray(dataset.x[i])
         target = dataset.t[i]
         mlp = MLP(1, 10, input, 1, target=target)
         loss = mlp.loss
