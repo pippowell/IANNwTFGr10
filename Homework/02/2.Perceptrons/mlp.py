@@ -39,13 +39,13 @@ class Layer:
         return self.layer_activation
 
     # A method called backward_step, which updates each unit’s parameters (i.e. weights and bias).
-    def backward_step(self, loss):
+    def backward_step(self, loss, deriv_loss_activ):
 
         self.loss = loss
 
         # ∂L/∂activation must be obtained from layer l+1 (or directly from the loss function derivative if l is the output layer).
         # need to change this! as is only works on final layer!
-        deriv_loss_activ = loss_derivative(self.layer_activation,self.loss)
+        deriv_loss_activ = deriv_loss_activ
 
         # gradient w.r.t. weight
         deriv_loss_weight = np.transpose(self.layer_input)@(np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ))
@@ -118,5 +118,12 @@ class MLP:
     def backward_propogation(self, loss):
 
         for i in reversed(range(self.n_hidden_layers+1)):
+
+            if i == self.n_hidden_layers:
+                deriv_loss_activ = loss_derivative(self.layer_activation, self.loss)
+
+            else:
+                #add this!
+
             current_layer = self.layers[i]
-            current_layer.backward_step(loss)
+            current_layer.backward_step(loss, deriv_loss_activ)
