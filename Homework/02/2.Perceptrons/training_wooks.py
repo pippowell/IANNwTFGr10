@@ -1,4 +1,4 @@
-import mlp
+import mlp_wooks
 import matplotlib.pyplot as plt
 import dataset
 import numpy as np
@@ -10,20 +10,21 @@ losslist = []
 def loss(output, target):
     return 0.5*(output - target)**2
 
-net = mlp.MLP(1, 1, 10, 1)       # (input layer of 1 unit, 10 hidden layers, hidden layers of 10 units, output layer of 1 unit)
+net = mlp_wooks.MLP(1, 1, 10, 1)       # (input layer of 1 unit, 10 hidden layers, hidden layers of 10 units, output layer of 1 unit)
 
 # Running through 1000 epochs
 e = 1
 while e < 1001:
 
-    for i in range(len(dataset.x)):
-
+    for i in range(len(dataset.x)-1):
+    
         input = dataset.x[i]
         target = dataset.t[i]        
         net.forward_step_wooks(input)
         net.backward_step_wooks(input, target)
         loss = loss(input, target)
         losslist.append(loss)
+
 
     e = e + 1
 
