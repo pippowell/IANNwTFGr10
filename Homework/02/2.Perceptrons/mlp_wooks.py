@@ -37,11 +37,10 @@ class Layer:
     # 2. A method called ’forward_step’, which returns each unit’s activation (i.e. output) using ReLu as the activation function.
     def forward_step_wooks(self, input):
         
-        output = [] # list to store all the activations, layer by layer
-        list_of_preact = [] # list to store all the z vectors, layer by layer
+        output = [] # list to store all the output, layer by layer
 
         for b, w in zip(self.bias_vector, self.weight_matrix):
-            output.append(relu(np.dot(w * input) + b))
+            output.append(relu(np.dot(w, input) + b))
 
         return output
 
@@ -57,10 +56,10 @@ class Layer:
         list_of_preact = [] # list to store all the z vectors, layer by layer
 
         for b, w in zip(self.bias_vector, self.weight_matrix):
-            preact = np.dot(w * input) + b 
+            preact = np.dot(w, input) + b 
             list_of_preact.append(preact)
 
-            act = relu(np.dot(w * input) + b)
+            act = relu(np.dot(w, input) + b)
             list_of_act.append(act)
 
         # backward pass
