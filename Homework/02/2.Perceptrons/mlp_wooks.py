@@ -20,6 +20,9 @@ class Layer:
     # an integer argument ’input_units’, indicating the number of units in the preceding layer
     def __init__(self, input_units: int, n_units: int):
 
+        self.input_units = input_units
+        self.n_units = n_units
+
         #  Instantiate a bias vector and a weight matrix of shape (n inputs, n units). 
         #  Use random values for the weights and zeros for the biases.
         self.bias_vector = np.zeros(n_units)
@@ -34,9 +37,9 @@ class Layer:
     def forward_step_wooks(self, input):
         
         for b, w in zip(self.bias_vector, self.weight_matrix):
-            self.output = relu(np.dot(w*input)+b)
+            output = relu(np.dot(w * input) + b)
 
-        return self.output
+        return output
 
     # A method called backward_step, which updates each unit’s parameters (i.e. weights and bias).
     def backward_step_wooks(self, input, target):
@@ -50,10 +53,10 @@ class Layer:
         list_of_preact = [] # list to store all the z vectors, layer by layer
 
         for b, w in zip(self.bias_vector, self.weight_matrix):
-            preact = np.dot(w*input)+b 
+            preact = np.dot(w * input) + b 
             list_of_preact.append(preact)
 
-            act = relu(np.dot(w*input)+b)
+            act = relu(np.dot(w * input) + b)
             list_of_act.append(act)
 
         # backward pass
@@ -70,46 +73,55 @@ class Layer:
         self.weight_matrix = self.weight_matrix - h * nabla_w
         self.bias_vector = self.bias_vector - h * nabla_b
 
+        # return self.weight_matrix, self.bias_vector
+
 # create a MLP class which combines instances of your Layer class into class MLP
 class MLP(Layer):
+
+    #### AttributeError: 'MLP' object has no attribute 'bias_vector' ###
     
     # n_hidden_layers: how many hidden layers, size_hl: how many units in hl, 
     # size_output: how many units in output layer, input_size: how many units in input layer
     def __init__(self, input_units: int, n_units: int, n_hidden_layers: int, size_output: int):
         super().__init__(input_units, n_units)
 
+        # self.bias_vector = np.zeros(n_units)
+        # self.weight_matrix = np.random.random((input_units, n_units))
+
         self.n_hidden_layers = n_hidden_layers
         self.size_output = size_output
-        # self.input_size = input_size
         
         # list of layers in the order of: input_layer, hidden_layer_1, ..., hidden_layer_n, output_layer
         self.layers = [] 
 
-        # needs further work - what exactly is going into the layers matrix here needs attention
-
-        for i in range(1, self.n_hidden_layers + 2):
-
-            # how about i = 0 (input layer)? if we don't need it then the for-loop can be in range(1, n_hidden_layers + 2)
+        for i in range(1, n_hidden_layers + 2):
 
             # the first hidden layer
             if i == 1: 
-                layer = Layer(self.input_size, n_units)
+                layer = Layer(input_units, n_units)
                 self.layers.append(layer)
 
-            # the rest of the hidden layers
+            # rest of the hidden layers
             if i != (n_hidden_layers + 1) and i != 1:
                 layer = Layer(n_units, n_units)
                 self.layers.append(layer)
             
             # the last layer (= the output layer)
             else:
-                layer = Layer(n_units, self.size_output)
+                layer = Layer(n_units, size_output)
                 self.layers.append(layer)
 
-    # A forward_step method which passes an input through the entire network
-    def forward_step_mlp_wooks(self, input):
-        super().forward_step_wooks(input)
 
-    # A backpropagation method which updates all the weights and biases in the network given a loss value.
-    def backpropagation_wooks(self, input, target):
-        super().backward_step_wooks(input, target)
+
+    # # A forward_step method which passes an input through the entire network
+    # def forward_step_mlp_wooks(self, input):
+    #     super().forward_step_wooks(input)
+
+    # # A backpropagation method which updates all the weights and biases in the network given a loss value.
+    # def backpropagation_wooks(self, input, target):
+    #     super().backward_step_wooks(input, target)
+
+net = MLP(1, 1, 10, 1)
+# print(net)
+
+print(help(MLP))
