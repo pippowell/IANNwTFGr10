@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 # 1. Randomly generate 100 numbers between 0 and 1 and save them to an array ’x’. These are your input values.
 x = np.random.random_sample(100)
-print(x)
+# print(x)
 
 # Alternatives
 # x = np.random.uniform(0,1,size=100)
@@ -34,4 +34,4 @@ plt.xlabel("Index")
 plt.ylabel("Target Value")
 plt.legend();
 
-plt.show()
+# plt.show()
