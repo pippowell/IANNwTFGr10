@@ -76,6 +76,8 @@ class Layer:
         self.weight_matrix = self.weight_matrix - h * nabla_w
         self.bias_vector = self.bias_vector - h * nabla_b
 
+        print(len(list_of_act), len(nabla_b), len(nabla_w) )
+
         # return self.weight_matrix, self.bias_vector
 
 # create a MLP class which combines instances of your Layer class into class MLP

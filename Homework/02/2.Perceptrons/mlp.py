@@ -7,6 +7,8 @@ def relu(x):
 def relu_derivative(x):
     return 1 if x > 0 else 0
 
+print(relu(-1))
+
 # the loss function is MSE (as mentioned in 2.4)
 def loss(output, target):
     return 0.5*(output - target)**2

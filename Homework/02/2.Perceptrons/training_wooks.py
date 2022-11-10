@@ -16,14 +16,15 @@ net = mlp_wooks.MLP(1, 1, 10, 1)       # (input layer of 1 unit, 10 hidden layer
 e = 1
 while e < 1001:
 
-    for i in range(len(dataset.x)):
-
+    for i in range(len(dataset.x)-1):
+    
         input = dataset.x[i]
         target = dataset.t[i]        
         net.forward_step_wooks(input)
         net.backward_step_wooks(input, target)
         loss = loss(input, target)
         losslist.append(loss)
+
 
     e = e + 1
 
