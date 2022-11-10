@@ -16,7 +16,7 @@ while e < 1001:
         input = np.array([dataset.x[i]])
         target = np.array([dataset.t[i]])
         net.forward_propagation(input, target)
-        loss = mlp.loss
+        loss = mlp.loss(net.output,target)
         losslist.append(loss)
         net.backward_propagation(loss,target)
 

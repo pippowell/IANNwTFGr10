@@ -92,6 +92,7 @@ class MLP(Layer):
         self.size_hl = size_hl
         self.size_output = size_output
         self.input_size = input_size
+        self.output = None
         
         # list of layers in the order of: input_layer, hidden_layer_1, ..., hidden_layer_n, output_layer
         self.layers = [] 
@@ -134,7 +135,8 @@ class MLP(Layer):
             current_layer = self.layers[i]
             current_layer.forward_step(input)
 
-        return self.layers[self.n_hidden_layers].layer_activation
+        self.output = self.layers[self.n_hidden_layers].layer_activation
+        return self.output
 
         if self.layers[self.n_hidden_layers].layer_activation != None:
             self.loss = loss(self.layers[self.n_hidden_layers].layer_activation, target)
@@ -142,23 +144,19 @@ class MLP(Layer):
 
     # backward propagation
     # A backpropagation method which updates all the weights and biases in the network given a loss value
-    def backward_propagation(self, loss, target):
+    def backward_propagation(self, target):
 
-        self.loss = loss
-
-        print(self.layers[self.n_hidden_layers-1].layer_activation,target)
-
-        final_deriv_loss = loss_derivative(self.layers[self.n_hidden_layers].layer_activation,target) * relu_derivative(self.layers[self.n_hidden_layers].layer_activation)
+        final_deriv_loss = loss_derivative(self.output,target) #* relu_derivative(self.output)
 
         for i in reversed(range(self.n_hidden_layers+1)):
 
             if i == self.n_hidden_layers:
                 #check this!
-                deriv_loss_activ = loss_derivative(self.layers[self.n_hidden_layers].layer_activation,target)*relu_derivative(self.layers[self.n_hidden_layers].layer_activation)
+                d_wrw = loss_derivative(self.output,target) #* relu_derivative(self.output)
 
             else:
                 #correct this!
-                deriv_loss_activ = (final_deriv_loss*self.layers[i].layer_activation)*relu_derivative(self.layers[i].layer_activation)
+                d_wrw = (final_deriv_loss*self.layers[i].layer_activation) #*relu_derivative(self.layers[i].layer_activation)
 
             current_layer = self.layers[i]
-            current_layer.backward_step(loss, deriv_loss_activ)
+            current_layer.backward_step(loss, d_wrw)
