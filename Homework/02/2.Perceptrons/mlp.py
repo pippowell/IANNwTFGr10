@@ -1,7 +1,8 @@
 import numpy as np
 
 def relu(x):
-    return max(0, x)
+    x = np.where(x>0,x,0)
+    return x
 
 def relu_derivative(x):
     return 1 if x > 0 else 0
@@ -35,7 +36,7 @@ class Layer:
     def forward_step(self, input):
         self.layer_input = input
         self.layer_preactivation = np.dot(self.layer_input, self.weight_matrix)
-        self.layer_activation = relu(np.dot(self.layer_input, self.weight_matrix) + self.bias_vector)
+        self.layer_activation = relu(self.layer_preactivation + self.bias_vector)
         return self.layer_activation
 
     # A method called backward_step, which updates each unit’s parameters (i.e. weights and bias).
@@ -100,11 +101,13 @@ class MLP:
 
         for i in range(self.n_hidden_layers + 1):
 
-            if i == 1:
+            if i == 0:
                 input = input
+                print(input)
             #needs work - figure out how to call activation of previous layer properly
             else:
                 input = self.layers[i-1].layer_activation
+                print(input)
 
             current_layer = self.layers[i]
             current_layer.forward_step(input)
