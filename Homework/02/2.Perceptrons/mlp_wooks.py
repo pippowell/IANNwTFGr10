@@ -1,7 +1,8 @@
 import numpy as np
 
 def relu(x):
-    return max(0, x)
+    x = np.where(x>0, x, 0)
+    return x
 
 def relu_derivative(x):
     return 1 if x > 0 else 0
@@ -36,8 +37,11 @@ class Layer:
     # 2. A method called ’forward_step’, which returns each unit’s activation (i.e. output) using ReLu as the activation function.
     def forward_step_wooks(self, input):
         
+        output = [] # list to store all the activations, layer by layer
+        list_of_preact = [] # list to store all the z vectors, layer by layer
+
         for b, w in zip(self.bias_vector, self.weight_matrix):
-            output = relu(np.dot(w * input) + b)
+            output.append(relu(np.dot(w * input) + b))
 
         return output
 
@@ -94,15 +98,15 @@ class MLP(Layer):
         # list of layers in the order of: input_layer, hidden_layer_1, ..., hidden_layer_n, output_layer
         self.layers = [] 
 
-        for i in range(1, n_hidden_layers + 2):
+        for i in range(0, n_hidden_layers + 1):
 
             # the first hidden layer
-            if i == 1: 
+            if i == 0: 
                 layer = Layer(input_units, n_units)
                 self.layers.append(layer)
 
             # rest of the hidden layers
-            if i != (n_hidden_layers + 1) and i != 1:
+            if i != (n_hidden_layers) and i != 0:
                 layer = Layer(n_units, n_units)
                 self.layers.append(layer)
             
@@ -124,4 +128,4 @@ class MLP(Layer):
 net = MLP(1, 1, 10, 1)
 # print(net)
 
-print(help(MLP))
+# print(help(MLP))

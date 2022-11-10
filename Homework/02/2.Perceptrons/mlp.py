@@ -1,7 +1,7 @@
 import numpy as np
 
 def relu(x):
-    x = np.where(x>0,x,0)
+    x = np.where(x>0, x, 0)
     return x
 
 def relu_derivative(x):
@@ -100,7 +100,7 @@ class Layer:
         # when doing the forward computation of a layer.
 
         # gradient w.r.t. input
-        self.nabla_input = np.multiply(relu_derivative(self.layer_preactivation),deriv_loss_activ)@np.transpose(self.weight_matrix)
+        self.nabla_input = np.multiply(relu_derivative(self.layer_preactivation),deriv_loss_activ) @ np.transpose(self.weight_matrix)
 
         h = 0.01 # learning rate (smaller than 0.05)
         # update parameters: 
@@ -145,14 +145,6 @@ class MLP(Layer):
             else:
                 layer = Layer(self.size_hl, self.size_output)
                 self.layers.append(layer)
-
-    # A forward_step method which passes an input through the entire network
-    def forward_step_mlp_wooks(self, input):
-        super().forward_step_wooks(input)
-
-    # A backpropagation method which updates all the weights and biases in the network given a loss value.
-    def backpropagation_wooks(self, target):
-        super().backward_step_wooks(target)
 
     # forward propagation
     # A forward_step method which passes an input through the entire network
