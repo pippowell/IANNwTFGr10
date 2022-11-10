@@ -25,6 +25,8 @@ class Layer:
         #  Use random values for the weights and zeros for the biases.
         self.bias_vector = np.zeros(n_units)
         self.weight_matrix = np.random.random((input_units, n_units))
+        print('the shape of the weight matrix is')
+        print(np.shape(self.weight_matrix))
 
         # instantiate empty attributes for layer input, layer preactivation and layer activation
         self.layer_input = None
@@ -125,17 +127,17 @@ class MLP(Layer):
 
         # needs further work - what exactly is going into the layers matrix here needs attention
 
-        for i in range(self.n_hidden_layers + 2):
+        for i in range(self.n_hidden_layers):
 
             # how about i = 0 (input layer)? if we don't need it then the for-loop can be in range(1, n_hidden_layers + 2)
 
             # the first hidden layer
-            if i == 1: 
+            if i == 0:
                 layer = Layer(self.input_size, self.size_hl)
                 self.layers.append(layer)
 
             # the rest of the hidden layers
-            if i != (n_hidden_layers + 1) and i != 1:
+            if i != (n_hidden_layers) and i != 0:
                 layer = Layer(self.size_hl, self.size_hl)
                 self.layers.append(layer)
             
@@ -160,11 +162,11 @@ class MLP(Layer):
 
             if i == 0:
                 input = input
-                print(input)
+                print('the shape of the input first layer ' + str(np.shape(input)))
             #needs work - figure out how to call activation of previous layer properly
             else:
                 input = self.layers[i-1].layer_activation
-                print(input)
+                print('the shape of the input next layer ' + str(np.shape(input)))
 
             current_layer = self.layers[i]
             current_layer.forward_step(input)

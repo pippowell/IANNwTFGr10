@@ -11,8 +11,9 @@ e = 1
 while e < 1001:
 
     for i in range(len(dataset.x)):
-        input = np.asarray(dataset.x[i])
-        target = dataset.t[i]
+        input = np.array([dataset.x[i]])
+        print('the shape of the input at the beginning of the training is ' + str(np.shape(input)))
+        target = np.array([dataset.t[i]])
         net = mlp.MLP(1, 10, 1, 1) # (10 hidden layers, hidden layers of 10 units, output layer of 1 unit, input layer of 1 unit)
         net.forward_propagation(input, target)
         loss = mlp.loss
@@ -22,7 +23,7 @@ while e < 1001:
     e = e + 1
 
 # Visualizing Training
-index = range(0, 100)
+index = range(0, 1000)
 plt.title("Visualizing Training")
 plt.plot(index, 0-1000, '.', color="red", label='Output')
 plt.plot(index, losslist, '.', color="green", label='Target')
