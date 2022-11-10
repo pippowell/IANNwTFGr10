@@ -148,15 +148,26 @@ class MLP(Layer):
 
         final_deriv_loss = loss_derivative(self.output,target) #* relu_derivative(self.output)
 
+        steps = []
+
         for i in reversed(range(self.n_hidden_layers+1)):
+
+            t_input = np.transpose(self.layers[i].layer_input)
 
             if i == self.n_hidden_layers:
                 #check this!
-                d_wrw = loss_derivative(self.output,target) #* relu_derivative(self.output)
+                ac_deriv = final_deriv_loss
+                preac_deriv = relu_derivative(self.layers[i].layer_preactivation)
+                steps.append(ac_deriv*preac_deriv)
+
+                d_wrw = t_input * np.prod(steps) #* relu_derivative(self.output)
 
             else:
-                #correct this!
-                d_wrw = (final_deriv_loss*self.layers[i].layer_activation) #*relu_derivative(self.layers[i].layer_activation)
+                ac_deriv =
+                preac_deriv =
+                steps.append(np.prod(steps) * ac_deriv * preac_deriv)
+
+                d_wrw = t_input * np.prod(steps) #*relu_derivative(self.layers[i].layer_activation)
 
             current_layer = self.layers[i]
             current_layer.backward_step(loss, d_wrw)
