@@ -18,7 +18,9 @@ def loss(output, target):
 
 # loss derivative w.r.t. output(activation) i.e. ∂L/∂activation
 def loss_derivative(output, target):
+    print('output of round is')
     print(output)
+    print('target of round is ')
     print(target)
     return output - target
 
@@ -53,33 +55,38 @@ class Layer:
         return self.layer_activation
 
     # A method called backward_step, which updates each unit’s parameters (i.e. weights and bias).
-    def backward_step(self, loss, deriv_loss_activ):
-
-        self.loss = loss
+    def backward_step(self,d_wrw,d_wrb):
 
         # ∂L/∂activation must be obtained from layer l+1 (or directly from the loss function derivative if l is the output layer).
         # need to change this! as is only works on final layer! -> solved in backward_step_wooks
-        self.deriv_loss_activ = deriv_loss_activ
+        #self.deriv_loss_activ = deriv_loss_activ
 
         # gradient w.r.t. weight
-        self.nabla_w = np.transpose(self.layer_input)@(np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ))
+
+        #self.nabla_w = np.transpose(self.layer_input)@(np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ))
 
         # gradient w.r.t. bias vector
-        self.nabla_b = np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ)
+        #self.nabla_b = np.multiply(relu_derivative(self.layer_preactivation), deriv_loss_activ)
 
         # It makes sense to store layer activations, pre-activations and layer input in attributes 
         # when doing the forward computation of a layer.
 
         # gradient w.r.t. input
-        self.nabla_input = np.multiply(relu_derivative(self.layer_preactivation),deriv_loss_activ) @ np.transpose(self.weight_matrix)
+        #self.nabla_input = np.multiply(relu_derivative(self.layer_preactivation),deriv_loss_activ) @ np.transpose(self.weight_matrix)
 
         h = 0.01 # learning rate (smaller than 0.05)
         # update parameters: 
         # weight matrix
-        self.weight_matrix = self.weight_matrix - h * self.nabla_w
+        print('weight matrix before backprop ')
+        print(np.shape(self.weight_matrix))
+        print('d_wrw')
+        print(np.shape(d_wrw))
+        self.weight_matrix = self.weight_matrix - h * d_wrw
+        print('after backprop, weight matrix size is')
+        print(np.shape(self.weight_matrix))
 
         # bias vector
-        self.bias_vector = self.bias_vector - h * self.nabla_b
+        self.bias_vector = self.bias_vector - h * d_wrb
 
 # create a MLP class which combines instances of your Layer class into class MLP
 class MLP(Layer):
@@ -157,17 +164,25 @@ class MLP(Layer):
             if i == self.n_hidden_layers:
                 #check this!
                 ac_deriv = final_deriv_loss
+                print('ac_deriv size')
+                print(np.shape(ac_deriv))
                 preac_deriv = relu_derivative(self.layers[i].layer_preactivation)
                 steps.append(ac_deriv*preac_deriv)
 
                 d_wrw = t_input * np.prod(steps) #* relu_derivative(self.output)
+                d_wrb = np.prod(steps)
 
             else:
-                ac_deriv =
-                preac_deriv =
+                ac_deriv = self.layers[i+1].weight_matrix
+                print('weight m size')
+                print(np.shape(self.weight_matrix))
+                preac_deriv = relu_derivative(self.layers[i].layer_preactivation)
                 steps.append(np.prod(steps) * ac_deriv * preac_deriv)
 
                 d_wrw = t_input * np.prod(steps) #*relu_derivative(self.layers[i].layer_activation)
+                d_wrb = np.prod(steps)
 
             current_layer = self.layers[i]
-            current_layer.backward_step(loss, d_wrw)
+            current_layer.backward_step(d_wrw, d_wrb)
+
+        print('i finished back prop')

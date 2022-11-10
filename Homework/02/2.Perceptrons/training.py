@@ -18,7 +18,7 @@ while e < 1001:
         net.forward_propagation(input, target)
         loss = mlp.loss(net.output,target)
         losslist.append(loss)
-        net.backward_propagation(loss,target)
+        net.backward_propagation(target)
 
     e = e + 1
 
