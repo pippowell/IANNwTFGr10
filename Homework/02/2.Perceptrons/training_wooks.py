@@ -13,11 +13,9 @@ while e < 1001:
     for i in range(len(dataset.x)):
         input = np.asarray(dataset.x[i])
         target = dataset.t[i]
-        net = mlp.MLP(1, 10, 1, 1) # (10 hidden layers, hidden layers of 10 units, output layer of 1 unit, input layer of 1 unit)
-        net.forward_propagation(input, target)
-        loss = mlp.loss
-        losslist.append(loss)
-        net.backward_propagation(loss)
+        net = mlp.MLP(1, 1, 10, 1) # (input layer of 1 unit, 10 hidden layers, hidden layers of 10 units, output layer of 1 unit, input layer of 1 unit)
+        net.forward_step_mlp_wooks(dataset.x[i])
+        net.backpropagation_wooks(dataset.x[i], dataset.t[i])
 
     e = e + 1
 
