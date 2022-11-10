@@ -5,14 +5,19 @@ def relu(x):
     return x
 
 def relu_derivative(x):
-    return 1 if x > 0 else 0
+    x = np.where(x > 0, 1, 0)
+    return x
 
 # the loss function is MSE (as mentioned in 2.4)
 def loss(output, target):
-    return 0.5*(output - target)**2
+    subtraction = output - target
+    raised = subtraction**2
+    return 0.5*raised
 
 # loss derivative w.r.t. output(activation) i.e. ∂L/∂activation
 def loss_derivative(output, target):
+    print(output)
+    print(target)
     return output - target
 
 class Layer: 
@@ -34,51 +39,15 @@ class Layer:
         self.layer_activation = None
 
     # 2. A method called ’forward_step’, which returns each unit’s activation (i.e. output) using ReLu as the activation function.
-    def forward_step_wooks(self, input):
-        
-        for b, w in zip(self.bias_vector, self.weight_matrix):
-            output = relu(np.dot(w*input)+b)
-
-        return output
-
-    # A method called backward_step, which updates each unit’s parameters (i.e. weights and bias).
-    def backward_step_wooks(self, target):
-
-        # predefine the lists for the gradients w.r.t. bias and weight
-        nabla_b = [np.zeros(b.shape) for b in self.bias_vector]
-        nabla_w = [np.zeros(w.shape) for w in self.weight_matrix]
-
-        # feedforward
-        list_of_act = [] # list to store all the activations, layer by layer
-        list_of_preact = [] # list to store all the z vectors, layer by layer
-
-        for b, w in zip(self.bias_vector, self.weight_matrix):
-            preact = np.dot(w*input)+b 
-            list_of_preact.append(preact)
-
-            act = relu(np.dot(w*input)+b)
-            list_of_act.append(act)
-
-        # backward pass
-        self.nabla_a = loss_derivative(list_of_act[-1], target) # nabla_a must be obtained from layer l+1, so the input is from layer l
-
-        nabla_b[-1] = np.multiply(relu_derivative(list_of_preact[-1]), self.nabla_a)
-        nabla_w[-1] = np.transpose(list_of_act[-2]) @ nabla_b[-1] 
-        # input = list_of_act[-2] since nabla_w is using nabla_a w.r.t. the last element of list_of_act.
-
-        # nabla_input is missing (I don't get why it's needed) can someone tell me?
-
-        h = 0.01 # learning rate (smaller than 0.05)
-        # update parameters: weight matrix, bias vector
-        self.weight_matrix = self.weight_matrix - h * nabla_w
-        self.bias_vector = self.bias_vector - h * nabla_b
-
-    # 2. A method called ’forward_step’, which returns each unit’s activation (i.e. output) using ReLu as the activation function.
     def forward_step(self, input):
         
         self.layer_input = input
         self.layer_preactivation = np.dot(self.layer_input, self.weight_matrix)
+        print('the layer preac is')
+        print(self.layer_preactivation)
         self.layer_activation = relu(self.layer_preactivation + self.bias_vector)
+        print('the layer ac is')
+        print(self.layer_activation)
         return self.layer_activation
 
     # A method called backward_step, which updates each unit’s parameters (i.e. weights and bias).
@@ -158,7 +127,7 @@ class MLP(Layer):
     # A forward_step method which passes an input through the entire network
     def forward_propagation(self, input, target):
 
-        for i in range(self.n_hidden_layers + 1):
+        for i in range(self.n_hidden_layers+1):
 
             if i == 0:
                 input = input
@@ -171,24 +140,31 @@ class MLP(Layer):
             current_layer = self.layers[i]
             current_layer.forward_step(input)
 
-        loss = mlp.loss(self.layers[n_hidden_layers+1],target)
+        return self.layers[self.n_hidden_layers].layer_activation
 
-        return loss
+        if self.layers[self.n_hidden_layers].layer_activation != None:
+            self.loss = loss(self.layers[self.n_hidden_layers].layer_activation, target)
+            return self.loss
 
     # backward propagation
     # A backpropagation method which updates all the weights and biases in the network given a loss value
-    def backward_propagation(self, loss):
+    def backward_propagation(self, loss, target):
+
+        self.loss = loss
+
+        print(self.layers[self.n_hidden_layers-1].layer_activation,target)
+
+        final_deriv_loss = loss_derivative(self.layers[self.n_hidden_layers].layer_activation,target) * relu_derivative(self.layers[self.n_hidden_layers].layer_activation)
 
         for i in reversed(range(self.n_hidden_layers+1)):
 
             if i == self.n_hidden_layers:
                 #check this!
-                deriv_loss_activ = loss_derivative(self.layer_activation, self.loss)*relu_derivative(self.layer_activation)
-                final_deriv_loss = deriv_loss_activ
+                deriv_loss_activ = loss_derivative(self.layers[self.n_hidden_layers].layer_activation,target)*relu_derivative(self.layers[self.n_hidden_layers].layer_activation)
 
             else:
                 #correct this!
-                deriv_loss_activ = (final_deriv_loss*self.layer_activation)*relu_derivative(self.layer_activation)
+                deriv_loss_activ = (final_deriv_loss*self.layers[i].layer_activation)*relu_derivative(self.layers[i].layer_activation)
 
             current_layer = self.layers[i]
             current_layer.backward_step(loss, deriv_loss_activ)

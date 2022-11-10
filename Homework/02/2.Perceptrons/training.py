@@ -6,19 +6,19 @@ import numpy as np
 # Create list to store errors for later plotting
 losslist = []
 
+net = mlp.MLP(1, 10, 1, 1) # (10 hidden layers, hidden layers of 10 units, output layer of 1 unit, input layer of 1 unit)
+
 # Running through 1000 epochs
 e = 1
 while e < 1001:
 
     for i in range(len(dataset.x)):
         input = np.array([dataset.x[i]])
-        print('the shape of the input at the beginning of the training is ' + str(np.shape(input)))
         target = np.array([dataset.t[i]])
-        net = mlp.MLP(1, 10, 1, 1) # (10 hidden layers, hidden layers of 10 units, output layer of 1 unit, input layer of 1 unit)
         net.forward_propagation(input, target)
         loss = mlp.loss
         losslist.append(loss)
-        net.backward_propagation(loss)
+        net.backward_propagation(loss,target)
 
     e = e + 1
 
