@@ -2,4 +2,19 @@
 performance of the network after 10 epochs feeding all data points per
 epoch, to reduce run time during these experimental runs.*
 
-Different
+Different Mathematical Functions
+-
+- Chaotic Function: sin(1/x)
+
+Larger Size of Dataset
+-
+
+Equally Spaced Input Values
+-
+
+Adding More Units to the Hidden Layers
+-
+
+Adding More Layers
+-
+
