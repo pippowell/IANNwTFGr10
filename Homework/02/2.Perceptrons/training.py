@@ -13,12 +13,16 @@ e = 1
 while e < 1001:
 
     for i in range(len(dataset.x)):
-        input = np.array([dataset.x[i]])
+        input = np.array([[dataset.x[i]]])
+        print('shape of input is')
+        print(np.shape(input))
         target = np.array([dataset.t[i]])
         net.forward_propagation(input, target)
         loss = mlp.loss(net.output,target)
         losslist.append(loss)
         net.backward_propagation(target)
+
+        print('training completed on epoch ' + str(i) + ' with target' + str(target) + ' and output' + str(net.output) + ' with loss' + str(loss))
 
     e = e + 1
 
