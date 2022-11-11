@@ -11,7 +11,7 @@ net = mlp.MLP(1, 10, 1, 1) # (10 hidden layers, hidden layers of 10 units, outpu
 
 # Running through 1000 epochs
 e = 1
-while e < 1001:
+while e < 11:
 
     for i in range(len(dataset.x)):
         input = np.array([[dataset.x[i]]])
