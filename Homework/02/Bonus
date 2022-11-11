@@ -3,18 +3,37 @@ performance of the network after 10 epochs feeding all data points per
 epoch, to reduce run time during these experimental runs.*
 
 Different Mathematical Functions
--
-- Chaotic Function: sin(1/x)
+- f(x) = x^5 + x^4 + x^3 + x^2 + x
+- sin(1/x)
+- cos(x)
 
-Larger Size of Dataset
--
+Testing Assignments -
 
-Equally Spaced Input Values
--
+Piper:
+Round 1 - Equation 3
+Round 2 - 500 Dataset Size
+Round 3 - Equally Spaced Yes
+Round 4 - 20 Units per HL
+Round 5 - 4 Layers
 
-Adding More Units to the Hidden Layers
--
+Wooki:
+Round 1 - Equation 1
+Round 2 - 1000 Dataset Size
+Round 3 - 15 Units per HL
+Round 4 - 3 Layers
 
-Adding More Layers
--
+Milad:
+Round 1 -  Equation 2
+Round 2 - 150 Dataset Size
+Round 3 - 25 Units per HL
+Round 4 - 2 Layers
 
+Observations -
+
+Piper's Observations:
+
+
+Wooki's Observations:
+
+
+Milad's Observations:
