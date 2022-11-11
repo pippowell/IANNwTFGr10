@@ -38,3 +38,4 @@ plt.ylabel("Error/Loss")
 plt.legend();
 
 plt.show()
+plt.savefig('Bonus Figures/plot.png')
