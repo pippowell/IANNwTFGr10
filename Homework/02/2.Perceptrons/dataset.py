@@ -34,4 +34,4 @@ plt.xlabel("Index")
 plt.ylabel("Target Value")
 plt.legend();
 
-# plt.show()
+plt.show()

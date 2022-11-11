@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 def relu(x):
     x = np.where(x>0, x, 0)
@@ -30,8 +31,6 @@ class Layer:
         #  Use random values for the weights and zeros for the biases.
         self.bias_vector = np.zeros(n_units)
         self.weight_matrix = np.random.random((input_units, n_units))
-        print('the original shape of the weight matrix is')
-        print(np.shape(self.weight_matrix))
 
         # instantiate empty attributes for layer input, layer preactivation and layer activation
         self.layer_input = None
@@ -42,17 +41,13 @@ class Layer:
     def forward_step(self, input):
         
         self.layer_input = input
-        print('shape of input')
-        print(np.shape(self.layer_input))
-        print('shape of weight matrix')
-        print(np.shape(self.weight_matrix))
         self.layer_preactivation = np.dot(self.layer_input, self.weight_matrix)
-        print('shape of layer preac')
-        print(np.shape(self.layer_preactivation))
         self.layer_activation = relu(self.layer_preactivation + self.bias_vector)
-        print('shape of layer ac')
-        print(np.shape(self.layer_activation))
+
+        print('forward step triggered once')
+
         return self.layer_activation
+
 
     # A method called backward_step, which updates each unit’s parameters (i.e. weights and bias).
     def backward_step(self,d_wrw,d_wrb):
@@ -75,14 +70,15 @@ class Layer:
         #self.nabla_input = np.multiply(relu_derivative(self.layer_preactivation),deriv_loss_activ) @ np.transpose(self.weight_matrix)
 
         h = 0.01 # learning rate (smaller than 0.05)
+
         # update parameters: 
         # weight matrix
-        testmat = h*d_wrw
-
         self.weight_matrix = self.weight_matrix - h * d_wrw
 
         # bias vector
         self.bias_vector = self.bias_vector - h * d_wrb
+
+        print('back step triggered once')
 
 # create a MLP class which combines instances of your Layer class into class MLP
 class MLP(Layer):
@@ -125,6 +121,8 @@ class MLP(Layer):
     # A forward_step method which passes an input through the entire network
     def forward_propagation(self, input, target):
 
+        print('forward prop triggered once')
+
         for i in range(self.n_hidden_layers+1):
 
             if i == 0:
@@ -135,19 +133,19 @@ class MLP(Layer):
 
             current_layer = self.layers[i]
             current_layer.forward_step(input)
-
-        for i in range(self.n_hidden_layers+1):
-            print('size of weight matrix end of forward prop in layer' + str(i))
-            print(np.shape(self.layers[i].weight_matrix))
         
         self.output = self.layers[self.n_hidden_layers].layer_activation
-        return self.output
 
+        print('forward prop finished once')
+
+        return self.output
 
     # backward propagation
     # A backpropagation method which updates all the weights and biases in the network given a loss value
     def backward_propagation(self, target):
-        
+
+        print('back prop triggered once')
+
         final_deriv_loss = loss_derivative(self.output,target) #* relu_derivative(self.output)
 
         steps = []
@@ -155,14 +153,17 @@ class MLP(Layer):
         for i in reversed(range(self.n_hidden_layers+1)):
 
             if i == self.n_hidden_layers:
-                #check this!
+                print('started layer 2')
                 ac_deriv = final_deriv_loss
                 preac_deriv = relu_derivative(self.layers[i].layer_preactivation)
                 steps.append(ac_deriv*preac_deriv)
 
                 t_input = np.transpose(self.layers[i].layer_input)
 
-                d_wrw = t_input * np.prod(steps)  # * relu_derivative(self.output)
+                print('size of step l2')
+                print(len(steps))
+
+                d_wrw = t_input * math.prod(steps)  # * relu_derivative(self.output)
                 d_wrb = np.prod(steps)
 
                 current_layer = self.layers[i]
@@ -173,14 +174,17 @@ class MLP(Layer):
                 preac_deriv = relu_derivative(self.layers[i].layer_preactivation)
                 steps.append(ac_deriv * preac_deriv) #change again!
 
-                d_wrw = self.layers[i].layer_input * np.prod(steps)  # * relu_derivative(self.output)
-                d_wrb = np.prod(steps)
+                print('size of step l1')
+                print(len(steps))
+                d_wrw = self.layers[i].layer_input * math.prod(steps)  # * relu_derivative(self.output)
+                print('got here')
+                d_wrb = math.prod(steps)
 
                 current_layer = self.layers[i]
                 current_layer.backward_step(d_wrw, d_wrb)
 
-            for i in range(self.n_hidden_layers + 1):
-                print('size of weight matrix end of back prop in layer' + str(i))
-                print(np.shape(self.layers[i].weight_matrix))
+        print('back prop finished once')
+
+
 
 
