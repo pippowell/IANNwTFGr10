@@ -173,7 +173,9 @@ class MLP(Layer):
                 preac_deriv = relu_derivative(self.layers[i].layer_preactivation)
                 steps.append(ac_deriv * preac_deriv) #change again!
 
-                d_wrw = self.layers[i].layer_input * np.prod(steps)  # * relu_derivative(self.output)
+
+                
+                d_wrw = self.layers[i].layer_input * np.prod(steps) # * relu_derivative(self.output)
                 d_wrb = np.prod(steps)
 
                 current_layer = self.layers[i]
