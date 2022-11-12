@@ -7,7 +7,7 @@ import numpy as np
 losslist = []
 avglist = []
 
-net = mlp.MLP(1, 10, 1, 1) # (10 hidden layers, hidden layers of 10 units, output layer of 1 unit, input layer of 1 unit)
+net = mlp.MLP(1, 10, 1, 1) # (1 hidden layer, hidden layers of 10 units, output layer of 1 unit, input layer of 1 unit)
 
 # Running through 1000 epochs
 e = 1
