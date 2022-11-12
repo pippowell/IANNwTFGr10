@@ -7,12 +7,6 @@ Different Mathematical Functions
 - sin(1/x)
 - cos(x)
 
-Naming Conventions:
-Equation Changed - [nameoffunction].png
-Dataset Size Changed - ds[#].png
-Units per HL - hl[#].png
-Layers - l[#].png
-
 Testing Assignments -
 
 Piper:
@@ -20,19 +14,19 @@ Round 1 - Equation 3
 Round 2 - 500 Dataset Size
 Round 3 - Equally Spaced Yes
 Round 4 - 20 Units per HL
-Round 5 - 4 Layers (Not Working Yet)
+Round 5 - 4 Layers
 
 Wooki:
 Round 1 - Equation 1
 Round 2 - 1000 Dataset Size
 Round 3 - 15 Units per HL
-Round 4 - 3 Layers (Not Working Yet)
+Round 4 - 3 Layers
 
 Milad:
 Round 1 -  Equation 2
 Round 2 - 150 Dataset Size
 Round 3 - 25 Units per HL
-Round 4 - 2 Layers (Not Working Yet)
+Round 4 - 2 Layers
 
 Observations -
 
