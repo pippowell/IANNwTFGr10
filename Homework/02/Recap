@@ -1,5 +1,5 @@
 • What is the purpose of an activation function?
-Wooki: I think its purpose is to have a threshold which allows an activation under certain condition e.g. if the sum of all the activation of the prior neuron*their weights and bias > 1
+Wooki: Its purpose is to have a threshold which allows an activation under certain condition e.g. if the sum of all the activation of the prior neuron*their weights and bias. 
 Piper: The purpose of an activation function is to simulate (in an admittedly somewhat crude fashion) the action potential threshold behavior of real neurons. This allows them to "fire," or
 pass on a value other than 0 in this case, if the input signal crosses a given threshold.
 
@@ -9,15 +9,13 @@ Piper: The sigmoid function is f(x) = 1/(1 + exp(-x)). As a graph, it looks like
 ReLU, or the Rectified Linear Unit function, is defined by the formula f(x) = max(0,x), which means that the function will output a zero for any number less than 0 (negative numbers) and the input itself for any value above zero (positive numbers).
 Graphically, this causes the function to take the form of a flat line (slope 0) for x values less than 0 and to take the form of a sloped diagonal line with slope 1 for x values above zero.
 
-• What is the derivative of the sigmoid function? What is the derivative of
-ReLu?
+• What is the derivative of the sigmoid function? What is the derivative of ReLu?
 Piper: The derivative of the sigmoid function in raw form is 1/1+e^-x. Using derivative rules, we can simplify this to the much simpler formula below:
 sigma(x)(1-sigma(x)), where sigma(x) is simply the sigmoid function itself, a handy simplification since it reveals that for any given input value,
 the value in the derivative of the sigmoid at that value is simply the output of that value in the sigmoid itself times 1 minus that output.
 
 • Why would one choose sigmoid or ReLU over the step function when
 deciding on which activation function to use?
-Wooki: (from Stack exchange) The gradient of sigmoids becomes increasingly small as the absolute value of x increases. 
-The constant gradient of ReLUs results in faster learning.
+Wooki: The gradient of sigmoids becomes increasingly small as the absolute value of x increases. The constant gradient of ReLUs results in faster learning.
 Piper: The step function is a limited activation function in that it will only output one of two values depending on the value of the input. This makes it less flexible than functions like the sigmoid, ReLU, and tan-h, which have (at least for some range of inputs) a broader range of output values.
 ReLU is additionally considered superior to both the sigmoid and tan-h because the latter two "saturate" or, graphically, hit a flatline, whereas ReLU can continue expanding along its diagonal part infinitely in the positive direction, accelerating convergence.
