@@ -1,6 +1,10 @@
+python==3.9
+
 numpy
 tensorflow
 jupyter
 matplotlib
 sympy
+math
+
 
