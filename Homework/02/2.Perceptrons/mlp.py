@@ -37,7 +37,7 @@ class Layer:
         self.layer_preactivation = None
         self.layer_activation = None
 
-    # 2. A method called ’forward_step’, which returns each unit’s activation (i.e. output) using ReLu as the activation function.
+    # A method called ’forward_step’, which returns each unit’s activation (i.e. output) using ReLu as the activation function.
     def forward_step(self, input):
         
         self.layer_input = input
@@ -48,7 +48,7 @@ class Layer:
 
 
     # A method called backward_step, which updates each unit’s parameters (i.e. weights and bias).
-    def backward_step(self,d_wrw,d_wrb):
+    def backward_step(self, d_wrw,d_wrb):
 
         h = 0.01 # learning rate (smaller than 0.05)
 
@@ -73,10 +73,10 @@ class MLP(Layer):
         self.input_size = input_size
         self.output = None
         
-        # list of layers in the order of: input_layer, hidden_layer_1, ..., hidden_layer_n, output_layer
+        # a list of layers in the order of: input_layer, hidden_layer_1, ..., hidden_layer_n, output_layer
         self.layers = []
 
-        for i in range(self.n_hidden_layers+1):
+        for i in range(self.n_hidden_layers + 1):
 
             # the first hidden layer
             if i == 0:
@@ -93,10 +93,8 @@ class MLP(Layer):
                 layer = Layer(self.size_hl, self.size_output)
                 self.layers.append(layer)
 
-    # forward propagation
-    # A forward_step method which passes an input through the entire network
-
-    def forward_propagation(self, input, target):
+    # forward propagation: a forward_step method which passes an input through the entire network
+    def forward_propagation(self, input):
 
         for i in range(self.n_hidden_layers+1):
 
@@ -113,8 +111,7 @@ class MLP(Layer):
         self.output = self.layers[self.n_hidden_layers].layer_activation
         return self.output
 
-    # backward propagation
-    # A backpropagation method which updates all the weights and biases in the network given a loss value
+    # backward propagation: a backpropagation method which updates all the weights and biases in the network given a loss value
     def backward_propagation(self, target):
 
         final_deriv_loss = loss_derivative(self.output,target) #* relu_derivative(self.output)

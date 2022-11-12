@@ -10,11 +10,13 @@ Changing the Dataset Size:
 As expected, a larger dataset size results in a lower final loss, i.e. the network learns the function better when fed more data.
 
 Changing # Perceptrons in Hidden Layer:
-Curiously, the network actually performs slightly worse with higher numbers of perceptrons in the hidden layer, although increasing from 10 to 15 does result in a slight
-decrease in final loss. Perhaps here, adding more perceptrons is resulting in a model that is too complex for the data and therefore is running into an overfitting-style
-problem?
+Curiously, the network actually performs slightly worse with higher numbers of perceptrons in the hidden layer, 
+although increasing from 10 to 15 does result in a slight decrease in final loss. 
+Perhaps here, adding more perceptrons is resulting in a model that is too complex for the data 
+and therefore is running into an overfitting-style problem?
 
 Using Evenly Spaced Data:
-With evenly spaced data, the network curiously temporarily moves further away from an accurate representation of the input function before honing in on it in later epochs.
-Perhaps here, the model is picking up on the even spacing and following this lead versus the actual function, therefore causing a delay before it starts narrowing in on the
-correct formula?
+With evenly spaced data, the network curiously temporarily moves further away from 
+an accurate representation of the input function before honing in on it in later epochs.
+Perhaps here, the model is picking up on the even spacing and following this lead versus the actual function, 
+therefore causing a delay before it starts narrowing in on the correct formula?

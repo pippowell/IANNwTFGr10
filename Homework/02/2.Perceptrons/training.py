@@ -16,7 +16,7 @@ while e < 1001:
     for i in range(len(dataset.x)):
         input = np.array([[dataset.x[i]]])
         target = np.array([dataset.t[i]])
-        net.forward_propagation(input, target)
+        net.forward_propagation(input)
         loss = mlp.loss(net.output,target)
         losslist.append(loss)
         net.backward_propagation(target)
@@ -38,4 +38,3 @@ plt.ylabel("Error/Loss")
 plt.legend();
 
 plt.show()
-plt.savefig('Bonus Figures/original.png')
