@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 1. Randomly generate 100 numbers between 0 and 1 and save them to an array ’x’. These are your input values.
-x = np.random.random_sample(100)
+x = np.random.random(100)
 # print(x)
 
 # Alternatives

@@ -2,38 +2,19 @@
 performance of the network after 10 epochs feeding all data points per
 epoch, to reduce run time during these experimental runs.*
 
-Different Mathematical Functions
-- f(x) = x^5 + x^4 + x^3 + x^2 + x
-- sin(1/x)
-- cos(x)
+Changing the Function:
+The network manages to determine each of the functions with fairly high accuracy, though it performs best for cosine and has the hardest time with the chaotic function
+(although even with that function, it still performs quite well).
 
-Testing Assignments -
+Changing the Dataset Size:
+As expected, a larger dataset size results in a lower final loss, i.e. the network learns the function better when fed more data.
 
-Piper:
-Round 1 - Equation 3
-Round 2 - 500 Dataset Size
-Round 3 - Equally Spaced Yes
-Round 4 - 20 Units per HL
-Round 5 - 4 Layers
+Changing # Perceptrons in Hidden Layer:
+Curiously, the network actually performs slightly worse with higher numbers of perceptrons in the hidden layer, although increasing from 10 to 15 does result in a slight
+decrease in final loss. Perhaps here, adding more perceptrons is resulting in a model that is too complex for the data and therefore is running into an overfitting-style
+problem?
 
-Wooki:
-Round 1 - Equation 1
-Round 2 - 1000 Dataset Size
-Round 3 - 15 Units per HL
-Round 4 - 3 Layers
-
-Milad:
-Round 1 -  Equation 2
-Round 2 - 150 Dataset Size
-Round 3 - 25 Units per HL
-Round 4 - 2 Layers
-
-Observations -
-
-Piper's Observations:
-
-
-Wooki's Observations:
-
-
-Milad's Observations:
+Using Evenly Spaced Data:
+With evenly spaced data, the network curiously temporarily moves further away from an accurate representation of the input function before honing in on it in later epochs.
+Perhaps here, the model is picking up on the even spacing and following this lead versus the actual function, therefore causing a delay before it starts narrowing in on the
+correct formula?

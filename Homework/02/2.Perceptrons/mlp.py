@@ -74,13 +74,9 @@ class MLP(Layer):
         self.output = None
         
         # list of layers in the order of: input_layer, hidden_layer_1, ..., hidden_layer_n, output_layer
-        self.layers = [] 
+        self.layers = []
 
-        # needs further work - what exactly is going into the layers matrix here needs attention
-
-        for i in range(self.n_hidden_layers):
-
-            # how about i = 0 (input layer)? if we don't need it then the for-loop can be in range(1, n_hidden_layers + 2)
+        for i in range(self.n_hidden_layers+1):
 
             # the first hidden layer
             if i == 0:
@@ -88,32 +84,33 @@ class MLP(Layer):
                 self.layers.append(layer)
 
             # the rest of the hidden layers
-            if i != (n_hidden_layers) and i != 0:
+            elif i != self.n_hidden_layers and i != 0:
                 layer = Layer(self.size_hl, self.size_hl)
                 self.layers.append(layer)
-            
-            # the last layer (= the output layer)
-            else:
+
+            # the last layer (i.e. the output layer)
+            elif i == self.n_hidden_layers:
                 layer = Layer(self.size_hl, self.size_output)
                 self.layers.append(layer)
 
     # forward propagation
     # A forward_step method which passes an input through the entire network
+
     def forward_propagation(self, input, target):
 
         for i in range(self.n_hidden_layers+1):
 
             if i == 0:
                 input = input
-            #needs work - figure out how to call activation of previous layer properly
+
             else:
                 input = self.layers[i-1].layer_activation
 
             current_layer = self.layers[i]
             current_layer.forward_step(input)
-        
-        self.output = self.layers[self.n_hidden_layers].layer_activation
 
+
+        self.output = self.layers[self.n_hidden_layers].layer_activation
         return self.output
 
     # backward propagation
@@ -126,15 +123,17 @@ class MLP(Layer):
         
         for i in reversed(range(self.n_hidden_layers+1)):
 
+            # if the current layer is the output layer, we use different calculations
             if i == self.n_hidden_layers:
                 ac_deriv = final_deriv_loss
                 preac_deriv = relu_derivative(self.layers[i].layer_preactivation)
-                steps.append(ac_deriv*preac_deriv)
+                steps.append(ac_deriv)
+                steps.append(preac_deriv)
 
                 t_input = np.transpose(self.layers[i].layer_input)
 
-                d_wrw = t_input * math.prod(steps)  # * relu_derivative(self.output)
-                d_wrb = np.prod(steps)
+                d_wrw = t_input * math.prod(steps)
+                d_wrb = math.prod(steps)
 
                 current_layer = self.layers[i]
                 current_layer.backward_step(d_wrw, d_wrb)
@@ -142,9 +141,10 @@ class MLP(Layer):
             else:
                 ac_deriv = np.transpose(self.layers[i+1].weight_matrix)
                 preac_deriv = relu_derivative(self.layers[i].layer_preactivation)
-                steps.append(ac_deriv * preac_deriv) #change again!
+                steps.append(ac_deriv)
+                steps.append(preac_deriv)
 
-                d_wrw = self.layers[i].layer_input * math.prod(steps)  # * relu_derivative(self.output)
+                d_wrw = self.layers[i].layer_input * math.prod(steps)
                 d_wrb = math.prod(steps)
 
                 current_layer = self.layers[i]

@@ -11,7 +11,7 @@ net = mlp.MLP(1, 10, 1, 1) # (1 hidden layer, hidden layers of 10 units, output 
 
 # Running through 1000 epochs
 e = 1
-while e < 11:
+while e < 1001:
 
     for i in range(len(dataset.x)):
         input = np.array([[dataset.x[i]]])
@@ -30,7 +30,7 @@ while e < 11:
 
 # Visualizing Training
 index = range(0,e-1)
-plt.title("Visualization of the Training")
+plt.title("Visualizing Training Performance")
 plt.plot(index, avglist, '.', color="green", label='Error/Loss')
 
 plt.xlabel("Epoch")
@@ -38,4 +38,4 @@ plt.ylabel("Error/Loss")
 plt.legend();
 
 plt.show()
-plt.savefig('Bonus Figures/plot.png')
+plt.savefig('Bonus Figures/original.png')
