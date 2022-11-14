@@ -16,7 +16,6 @@ import numpy as np
 # tfds.show_examples(train_ds, ds_info)
 
 #2.2 Setting up the data pipeline
-
 def prepare_data(dataset):
 
     # convert data from uint8 to float32
@@ -41,9 +40,6 @@ def prepare_data(dataset):
 
     # return preprocessed dataset
     return dataset
-
-train_dataset = train_ds.apply(prepare_data)
-test_dataset = test_ds.apply(prepare_data)
 
 # 2.3 Building a deep neural network with TensorFlow
 class Dense(tf.keras.layers.Layer):
@@ -70,6 +66,12 @@ hidden_layer_2 = Dense(n_units=256, activation_function=tf.nn.relu)
 output_layer = Dense(n_units=10, activation_function=tf.nn.softmax)
 
 # 2.4 Training the network
+# choose optimizer and loss
+optimizer = tf.keras.optimizers.SGD(learning_rate=0.005, momentum=0)
+loss_function = tf.keras.losses.MeanSquaredError()
 
+# define training and test datasets
+train_dataset = train_ds.apply(prepare_data)
+test_dataset = test_ds.apply(prepare_data)
 
 
