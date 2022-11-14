@@ -14,7 +14,7 @@ import tensorflow as tf
 
 # tfds.show_examples(train_ds, ds_info)
 
-#2.2 Data Pipeline
+#2.2 Setting up the data pipeline
 def prepare_mnist_data(mnist): 
     
     # convert unint8 to tf.float
@@ -22,4 +22,14 @@ def prepare_mnist_data(mnist):
 
     # flatten the image to (28, 28)
     mnist = mnist.map(lambda img, target: (tf.reshape(img, (-1)), target))
+
+    # normalize the input
+    mnist = mnist.map(lambda img, target: ((img/128)-1, target))
+
+    # encode the labels as one-hot vectors
+    mnist = mnist.map(lambda img, target: (img, tf.one_hot(target, depth = 10)))
+
+# 2.3 Building a deep neural network with TensorFlow
+
+    
 
