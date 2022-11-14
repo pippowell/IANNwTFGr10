@@ -15,5 +15,11 @@ import tensorflow as tf
 # tfds.show_examples(train_ds, ds_info)
 
 #2.2 Data Pipeline
+def prepare_mnist_data(mnist): 
+    
+    # convert unint8 to tf.float
+    mnist = mnist.map(lambda img, target: (tf.cas(img, tf.float32), target))
 
+    # flatten the image to (28, 28)
+    mnist = mnist.map(lambda img, target: (tf.reshape(img, (-1)), target))
 
