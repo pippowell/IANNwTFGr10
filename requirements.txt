@@ -2,6 +2,7 @@ python==3.9
 
 numpy
 tensorflow
+tensorflow_datasets
 jupyter
 matplotlib
 sympy
