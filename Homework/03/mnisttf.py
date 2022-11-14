@@ -42,9 +42,9 @@ def prepare_data(dataset):
     # return preprocessed dataset
     return dataset
 
-
 train_dataset = train_ds.apply(prepare_data)
 test_dataset = test_ds.apply(prepare_data)
+
 # 2.3 Building a deep neural network with TensorFlow
 class Dense(tf.keras.layers.Layer):
 
