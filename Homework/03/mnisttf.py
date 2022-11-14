@@ -94,5 +94,7 @@ test_dataset = test_ds.apply(prepare_data)
 optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate, momentum=0)
 loss_function = tf.keras.losses.MeanSquaredError()
 
-
-
+# Different arrays for the different values for visualization
+train_losses = []
+test_losses = []
+test_accuracies = []
