@@ -2,7 +2,7 @@ import tensorflow_datasets as tfds
 import tensorflow as tf
 
 #2.1 Load Dataset
-(train_ds, test_ds),ds_info = tfds.load ('mnist', split =['train', 'test'], as_supervised = True, with_info = True)
+(train_ds, test_ds), ds_info = tfds.load ('mnist', split =['train', 'test'], as_supervised = True, with_info = True)
 
 # print("ds_info: \n", ds_info)
 
@@ -18,7 +18,7 @@ import tensorflow as tf
 def prepare_mnist_data(mnist): 
     
     # convert unint8 to tf.float
-    mnist = mnist.map(lambda img, target: (tf.cas(img, tf.float32), target))
+    mnist = mnist.map(lambda img, target: (tf.cast(img, tf.float32), target))
 
     # flatten the image to (28, 28)
     mnist = mnist.map(lambda img, target: (tf.reshape(img, (-1)), target))
@@ -28,6 +28,11 @@ def prepare_mnist_data(mnist):
 
     # encode the labels as one-hot vectors
     mnist = mnist.map(lambda img, target: (img, tf.one_hot(target, depth = 10)))
+
+    return mnist
+
+print("prepare train_ds", train_ds.apply(prepare_mnist_data))
+print("prepare test_ds", test_ds.apply(prepare_mnist_data))
 
 # 2.3 Building a deep neural network with TensorFlow
 
