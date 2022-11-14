@@ -81,12 +81,18 @@ class MyModel(tf.keras.Model):
         return output
 
 # 2.4 Training the network
-# choose optimizer and loss
-optimizer = tf.keras.optimizers.SGD(learning_rate=0.005, momentum=0)
-loss_function = tf.keras.losses.MeanSquaredError()
+
+# hyperparameters
+epoch = 10
+learning_rate = 0.1
 
 # define training and test datasets
 train_dataset = train_ds.apply(prepare_data)
 test_dataset = test_ds.apply(prepare_data)
+
+# choose optimizer and loss
+optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate, momentum=0)
+loss_function = tf.keras.losses.MeanSquaredError()
+
 
 
