@@ -62,7 +62,7 @@ class Dense(tf.keras.layers.Layer):
 hidden_layer_1 = Dense(n_units=256, activation_function=tf.nn.relu)
 hidden_layer_2 = Dense(n_units=256, activation_function=tf.nn.relu)
 
-# 10 units since we need to categorize 9 numbers: 0 - 9, softmax as activation function due to its output as a vector, unlike sigmoid
+# softmax as activation function returns a probability distribution of length 10
 output_layer = Dense(n_units=10, activation_function=tf.nn.softmax)
 
 # 2.4 Training the network
