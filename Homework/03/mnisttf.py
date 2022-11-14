@@ -80,8 +80,6 @@ class MyModel(tf.keras.Model):
         
         return output
 
-
-
 # 2.4 Training the network
 # choose optimizer and loss
 optimizer = tf.keras.optimizers.SGD(learning_rate=0.005, momentum=0)
