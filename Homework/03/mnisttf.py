@@ -21,7 +21,7 @@ def prepare_mnist_data(mnist):
     mnist = mnist.map(lambda img, target: (tf.cast(img, tf.float32), target))
 
     # flatten the image to (28, 28)
-    mnist = mnist.map(lambda img, target: (tf.reshape(img, (-1)), target))
+    mnist = mnist.map(lambda img, target: (tf.reshape(img, (-1,)), target))
 
     # normalize the input
     mnist = mnist.map(lambda img, target: ((img/128)-1, target))
