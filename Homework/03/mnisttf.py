@@ -1,5 +1,6 @@
 import tensorflow_datasets as tfds
 import tensorflow as tf
+import numpy as np
 
 #2.1 Load Dataset
 (train_ds, test_ds), ds_info = tfds.load ('mnist', split =['train', 'test'], as_supervised = True, with_info = True)
@@ -15,25 +16,35 @@ import tensorflow as tf
 # tfds.show_examples(train_ds, ds_info)
 
 #2.2 Setting up the data pipeline
-def prepare_mnist_data(mnist): 
-    
-    # convert unint8 to tf.float
+
+def prepare_data(dataset):
+
+    # convert data from uint8 to float32
     mnist = mnist.map(lambda img, target: (tf.cast(img, tf.float32), target))
 
-    # flatten the image to (28, 28)
-    mnist = mnist.map(lambda img, target: (tf.reshape(img, (-1,)), target))
+    # flatten the images into vectors
+    dataset = dataset.map(lambda img, target: (tf.reshape(img, (-1,)), target))
 
-    # normalize the input
-    mnist = mnist.map(lambda img, target: ((img/128)-1, target))
+    # input normalization, just bringing image values from range [0, 255] to [-1, 1]
+    dataset = dataset.map(lambda img, target: ((img / 128.) - 1., target))
 
-    # encode the labels as one-hot vectors
-    mnist = mnist.map(lambda img, target: (img, tf.one_hot(target, depth = 10)))
+    # create one-hot targets
+    dataset = dataset.map(lambda img, target: (img, tf.one_hot(target, depth=10)))
 
-    return mnist
+    # cache
+    dataset = dataset.cache()
 
-print("prepare train_ds", train_ds.apply(prepare_mnist_data))
-print("prepare test_ds", test_ds.apply(prepare_mnist_data))
+    # shuffle, batch, prefetch
+    dataset = dataset.shuffle(1000)
+    dataset = dataset.batch(32)
+    dataset = dataset.prefetch(20)
 
+    # return preprocessed dataset
+    return dataset
+
+
+train_dataset = train_ds.apply(prepare_data)
+test_dataset = test_ds.apply(prepare_data)
 # 2.3 Building a deep neural network with TensorFlow
 class Dense(tf.keras.layers.Layer):
 
