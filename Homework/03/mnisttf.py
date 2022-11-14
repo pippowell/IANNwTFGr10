@@ -1,4 +1,5 @@
 import tensorflow_datasets as tfds
+from tensorflow.keras.layers import Dense
 import tensorflow as tf
 import numpy as np
 
@@ -58,12 +59,28 @@ class Dense(tf.keras.layers.Layer):
         x = inputs @ self.w + self.b
         return self.activation_function(x)
 
-# good (albeit arbitrary) starting point would be to have two hidden layers with 256 units each
-hidden_layer_1 = Dense(n_units=256, activation_function=tf.nn.relu)
-hidden_layer_2 = Dense(n_units=256, activation_function=tf.nn.relu)
 
-# softmax as activation function returns a probability distribution of length 10
-output_layer = Dense(n_units=10, activation_function=tf.nn.softmax)
+class MyModel(tf.keras.Model):
+    def __init__(self):
+        super(MyModel, self).__init__()
+        
+        # good (albeit arbitrary) starting point would be to have two hidden layers with 256 units each
+        self.hidden_layer_1 = Dense(n_units=256, activation_function=tf.nn.relu)
+        self.hidden_layer_2 = Dense(n_units=256, activation_function=tf.nn.relu)
+
+        # softmax as activation function returns a probability distribution of length 10
+        self.output_layer = Dense(n_units=10, activation_function=tf.nn.softmax)
+    
+    @tf.function
+    def __call__(self, inputs):
+        
+        output_1 = self.hidden_layer_1(inputs)
+        output_2 = self.hidden_layer_2(output_1)
+        output = self.output_layer(output_2)
+        
+        return output
+
+
 
 # 2.4 Training the network
 # choose optimizer and loss
