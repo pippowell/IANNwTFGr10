@@ -25,7 +25,7 @@ learning_rate = 0.1
 model = network.MyModel()
 
 # choose optimizer and loss
-optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate)
+optimizer = tf.keras.optimizers.Adam()
 loss_func = tf.keras.losses.CategoricalCrossentropy()
 
 # different arrays for the different values for visualization
