@@ -17,6 +17,10 @@ def train_step(model, input, target, loss_func, optimizer):
 
     return loss
 
+def test_step():
+    pass 
+    # train_step but without gradienttape()
+
 # hyperparameters
 epoch = 3 # need to be 10, just set at 3 for testing out the code
 learning_rate = 0.1
@@ -50,7 +54,7 @@ for e in range(0, epoch):
         train_loss = train_step(model, input, target, loss_func, optimizer)
         list.append(train_loss)
 
-    train_losses.append(tf.reduce_mean(list))
+    train_losses.append(tf.reduce_mean(list)) # reduce_mean vs tf.Metrics.Mean() ?
 
 # print(train_losses)
 # >> [<tf.Tensor: shape=(), dtype=float32, numpy=14.540907>, <tf.Tensor: shape=(), dtype=float32, numpy=14.519989>, 
