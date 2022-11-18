@@ -11,7 +11,7 @@ epoch = 3 # needs to be 10, just set at 3 for testing out the code
 learning_rate = 0.1
 
 # model object
-model = tfnetwork.MyModel(2)
+model = tfnetwork.Network(2)
 
 # choose optimizer and loss
 optimizer = tf.keras.optimizers.Adam()
