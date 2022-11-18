@@ -2,7 +2,7 @@ import mnisttf
 import network
 import tensorflow as tf
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
 # 2.4 Training the network
 
@@ -14,7 +14,7 @@ learning_rate = 0.1
 model = network.MyModel()
 
 # choose optimizer and loss
-optimizer = tf.keras.optimizers.Adam()
+optimizer = tf.keras.optimizers.SGD(learning_rate)
 loss_func_categorical = tf.keras.losses.CategoricalCrossentropy()
 
 # different arrays for the different values for visualization
@@ -25,9 +25,7 @@ test_accuracies = []
 
 # define training and test datasets
 train_dataset = mnisttf.train_ds.apply(mnisttf.prepare_data)
-train_dataset = train_dataset.unbatch()
 test_dataset = mnisttf.test_ds.apply(mnisttf.prepare_data)
-test_dataset = test_dataset.unbatch()
 
 # print("train data set: ", train_dataset)
 # >> train data set:  <PrefetchDataset element_spec=(TensorSpec(shape=(None, 784), dtype=tf.float32, name=None), 
@@ -64,13 +62,17 @@ def test(model, test_data, loss_function):
 
     return test_loss, test_accuracy
 
+tf.keras.backend.clear_session()
+test_dataset = test_dataset.take(100)
+train_dataset = train_dataset.take(1000)
+
 #testing once before we begin
-test_loss, test_accuracy = test(model, test_dataset.take(320).batch(32), loss_func_categorical)
+test_loss, test_accuracy = test(model, test_dataset, loss_func_categorical)
 test_losses.append(test_loss)
 test_accuracies.append(test_accuracy)
 
 #check how model performs on train data once before we begin
-train_loss, train_accuracy = test(model, train_dataset.take(320).batch(32), loss_func_categorical)
+train_loss, train_accuracy = test(model, train_dataset, loss_func_categorical)
 train_losses.append(train_loss)
 train_accuracies.append(train_accuracy)
 
@@ -84,17 +86,22 @@ def train(epoch, model, traindata, testdata, lossfunction, optimizer):
         #ONLY TAKING A TINY FRACTION OF THE DATA!
 
         epoch_loss_agg = []
-        for input,target in traindata.shuffle(40000).take(320).batch(32):
+        epoch_ac_agg = []
+
+        for input,target in train_dataset:
+            prediction = model(input)
             train_loss = train_step(model, input, target, lossfunction, optimizer)
-            trainloss, train_accuracy = test(model, traindata, lossfunction)
+            train_accuracy = np.argmax(target, axis=1) == np.argmax(prediction, axis=1)
+            train_accuracy = np.mean(train_accuracy)
             epoch_loss_agg.append(train_loss)
+            epoch_ac_agg.append(train_accuracy)
 
         #track training loss
         train_losses.append(tf.reduce_mean(epoch_loss_agg))
-        train_accuracies.append(train_accuracy)
+        train_accuracies.append(tf.reduce_mean(epoch_ac_agg))
 
         #testing, so we can track accuracy and test loss
-        test_loss, test_accuracy = test(model, testdata.take(320).batch(32), loss_func_categorical)
+        test_loss, test_accuracy = test(model, testdata, lossfunction)
         test_losses.append(test_loss)
         test_accuracies.append(test_accuracy)
 
