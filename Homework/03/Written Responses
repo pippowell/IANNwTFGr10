@@ -1,8 +1,8 @@
 Dataset Info:
-# Number of Training Images: 60000
-# Number of Testing Images: 10000
-# Image Shape: 28,28,1 (28 by 28 images, grayscale)
-# Range of Pixels: 0-255 (grayscale)
+Number of Training Images: 60000
+Number of Testing Images: 10000
+Image Shape: 28,28,1 (28 by 28 images, grayscale)
+Range of Pixels: 0-255 (grayscale)
 
 Playing w/ Parameters:
 Learning Rate
@@ -12,8 +12,11 @@ Size of Layers
 Optimizer
 SGD Momentum (other than default)
 
-Observations w/ Combos of the Above:
-1.
-2.
-3.
-4.
+Observations:
+
+1000 Test Samples and 10000 Training: Same general behavior as initial run, perhaps a little more consistent in accuracy after epoch 6.
+4 Hidden Layers: Initial sharp increase in accuracy, followed by holding steady at 97%. Still fluctuates up and down around this point. Test loss sharply increases early in epochs before continuing downward trend.
+1 Hidden Layer, Size 500: Ultimate accuracy is similar to original run (97%), but converges on this accuracy slower.
+Learning Rate = 0.01: Slower increase in accuracy and lower ultimate accuracy.
+
+It appears we can achieve decent results even with only one hidden layer, even if it does take more time to reach higher accuracy in this case.

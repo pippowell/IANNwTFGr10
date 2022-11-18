@@ -36,7 +36,7 @@ def prepare_data(dataset):
 
     # shuffle, batch, prefetch
     dataset = dataset.shuffle(1000)
-    dataset = dataset.batch(2**5)
+    dataset = dataset.batch(2**6)
     dataset = dataset.prefetch(tf.data.AUTOTUNE) 
 
     # return preprocessed dataset

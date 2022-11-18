@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # 2.4 Training the network
 
 # hyperparameters
-epoch = 3 # needs to be 10, just set at 3 for testing out the code
+epoch = 10 # needs to be 10, just set at 3 for testing out the code
 learning_rate = 0.1
 
 # model object
@@ -63,8 +63,8 @@ def test(model, test_data, loss_function):
     return test_loss, test_accuracy
 
 tf.keras.backend.clear_session()
-test_dataset = test_dataset.take(100)
-train_dataset = train_dataset.take(1000)
+test_dataset = test_dataset.take(1000)
+train_dataset = train_dataset.take(10000)
 
 #testing once before we begin
 test_loss, test_accuracy = test(model, test_dataset, loss_func_categorical)
