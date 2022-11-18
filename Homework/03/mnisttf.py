@@ -32,7 +32,7 @@ def prepare_data(dataset):
     dataset = dataset.map(lambda img, target: (img, tf.one_hot(target, depth=10)))
 
     # cache
-    dataset = dataset.cache()
+    dataset = dataset.take(1000).cache().repeat()
 
     # shuffle, batch, prefetch
     dataset = dataset.shuffle(1000)
