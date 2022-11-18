@@ -1,5 +1,5 @@
 import mnisttf
-import tfnetwork
+import network
 import tensorflow as tf
 import numpy as np
 import matplotlib as plt
@@ -11,7 +11,7 @@ epoch = 3 # needs to be 10, just set at 3 for testing out the code
 learning_rate = 0.1
 
 # model object
-model = tfnetwork.Network(2)
+model = network.MyModel()
 
 # choose optimizer and loss
 optimizer = tf.keras.optimizers.Adam()
@@ -25,7 +25,9 @@ test_accuracies = []
 
 # define training and test datasets
 train_dataset = mnisttf.train_ds.apply(mnisttf.prepare_data)
+train_dataset = train_dataset.unbatch()
 test_dataset = mnisttf.test_ds.apply(mnisttf.prepare_data)
+test_dataset = test_dataset.unbatch()
 
 # print("train data set: ", train_dataset)
 # >> train data set:  <PrefetchDataset element_spec=(TensorSpec(shape=(None, 784), dtype=tf.float32, name=None), 
@@ -76,7 +78,7 @@ train_accuracies.append(train_accuracy)
 def train(epoch, model, traindata, testdata, lossfunction, optimizer):
 
     for e in range(epoch):
-        print(f'Epoch: {str(epoch)} starting with accuracy {test_accuracies[-1]}')
+        print(f'Epoch: {str(e)} starting with accuracy {test_accuracies[-1]}')
 
         #training (and checking in with training)
         #ONLY TAKING A TINY FRACTION OF THE DATA!
