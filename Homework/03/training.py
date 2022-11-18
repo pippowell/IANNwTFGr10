@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # 2.4 Training the network
 
 # hyperparameters
-epoch = 3 # needs to be 10, just set at 3 for testing out the code
+epoch = 10
 learning_rate = 0.1
 
 # model object
