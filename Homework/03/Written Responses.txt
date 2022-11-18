@@ -1,0 +1,20 @@
+Dataset Info:
+# Number of Training Images: 60000
+# Number of Testing Images: 10000
+# Image Shape: 28,28,1 (28 by 28 images, grayscale)
+# Range of Pixels: 0-255 (grayscale)
+
+Playing w/ Parameters:
+Learning Rate
+Batch Size
+Number of Hidden Layers
+Size of Layers
+Optimizer
+SGD Momentum (other than default)
+
+Observations w/ Combos of the Above:
+Original: Learning Rate = 0.1, Batch Size = 2*6, Number of Hidden Layers = 2, Size of the Layers = 256 units, Optimizer = SGD, Momentum = 0
+1. Learning Rate = 0.5, Batch Size = 2**8, Number of Layers = 4, Size of the Layers = 128 units, Optimizer = SGD, Momentum = 1
+2. Learning Rate = 0.25, Batch Size = 2**16, Number of Layers = 3, Size of the Layers = 64 units, Optimizer = Adam
+3. Learning Rate = 0.01, Batch Size = 2**4, Number of Layers = 1, Size of the Layers = 512 units, Optimizer = SGD, Momentum = 0.5
+4.

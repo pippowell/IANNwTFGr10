@@ -7,14 +7,14 @@ import matplotlib.pyplot as plt
 # 2.4 Training the network
 
 # hyperparameters
-epoch = 10 # needs to be 10, just set at 3 for testing out the code
+epoch = 10
 learning_rate = 0.1
 
 # model object
 model = network.MyModel()
 
 # choose optimizer and loss
-optimizer = tf.keras.optimizers.SGD(learning_rate)
+optimizer = tf.keras.optimizers.SGD(learning_rate=learning_rate)
 loss_func_categorical = tf.keras.losses.CategoricalCrossentropy()
 
 # different arrays for the different values for visualization
@@ -66,12 +66,12 @@ tf.keras.backend.clear_session()
 test_dataset = test_dataset.take(1000)
 train_dataset = train_dataset.take(10000)
 
-#testing once before we begin
+# testing once before we begin
 test_loss, test_accuracy = test(model, test_dataset, loss_func_categorical)
 test_losses.append(test_loss)
 test_accuracies.append(test_accuracy)
 
-#check how model performs on train data once before we begin
+# check how model performs on train data once before we begin
 train_loss, train_accuracy = test(model, train_dataset, loss_func_categorical)
 train_losses.append(train_loss)
 train_accuracies.append(train_accuracy)
@@ -80,7 +80,7 @@ train_accuracies.append(train_accuracy)
 def train(epoch, model, traindata, testdata, lossfunction, optimizer):
 
     for e in range(epoch):
-        print(f'Epoch: {str(e)} starting with accuracy {test_accuracies[-1]}')
+        print(f'Epoch: {str(e)} starting with test accuracy {test_accuracies[-1]}')
 
         #training (and checking in with training)
         #ONLY TAKING A TINY FRACTION OF THE DATA!
@@ -105,10 +105,10 @@ def train(epoch, model, traindata, testdata, lossfunction, optimizer):
         test_losses.append(test_loss)
         test_accuracies.append(test_accuracy)
 
-#Run the network
+# Run the network
 train(epoch,model,train_dataset,test_dataset,loss_func_categorical,optimizer)
 
-#Visualization
+# Visualization
 plt.figure()
 line1, = plt.plot(train_losses)
 line2, = plt.plot(test_losses)
