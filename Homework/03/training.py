@@ -1,18 +1,17 @@
 import mnisttf
-import network
-import tensorflow_datasets as tfds
-from tensorflow.keras.layers import Dense
+import tfnetwork
 import tensorflow as tf
 import numpy as np
+import matplotlib as plt
 
 # 2.4 Training the network
 
 # hyperparameters
-epoch = 3 # need to be 10, just set at 3 for testing out the code
+epoch = 3 # needs to be 10, just set at 3 for testing out the code
 learning_rate = 0.1
 
 # model object
-model = network.MyModel()
+model = tfnetwork.MyModel(2)
 
 # choose optimizer and loss
 optimizer = tf.keras.optimizers.Adam()
@@ -53,10 +52,10 @@ def test(model, test_data, loss_function):
     for (input, target) in test_data:
         prediction = model(input)
         sample_test_loss = loss_function(target, prediction)
-        sample_test_accuracy =  np.argmax(target, axis=1) == np.argmax(prediction, axis=1)
+        sample_test_accuracy = np.argmax(target, axis=1) == np.argmax(prediction, axis=1)
         sample_test_accuracy = np.mean(sample_test_accuracy)
         test_loss_aggregator.append(sample_test_loss.numpy())
-        test_accuracy_aggregator.append(np.mean(sample_test_accuracy))
+        test_accuracy_aggregator.append(sample_test_accuracy)
 
     test_loss = tf.reduce_mean(test_loss_aggregator)
     test_accuracy = tf.reduce_mean(test_accuracy_aggregator)
@@ -74,23 +73,42 @@ train_losses.append(train_loss)
 train_accuracies.append(train_accuracy)
 
 # We train for num_epochs epochs. NOTICE WE DO THIS ONLY ON A TINY FRACTION OF THE DATA!
-for e in range(epoch):
-    print(f'Epoch: {str(epoch)} starting with accuracy {test_accuracies[-1]}')
+def train(epoch, model, traindata, testdata, lossfunction, optimizer):
 
-    #training (and checking in with training)
-    #ONLY TAKING A TINY FRACTION OF THE DATA!
-    epoch_loss_agg = []
-    for input,target in train_dataset.shuffle(40000).take(320).batch(32):
-        train_loss = train_step(model, input, target, loss_func_categorical, optimizer)
-        epoch_loss_agg.append(train_loss)
-    
-    #track training loss
-    train_losses.append(tf.reduce_mean(epoch_loss_agg))
+    for e in range(epoch):
+        print(f'Epoch: {str(epoch)} starting with accuracy {test_accuracies[-1]}')
 
-    #testing, so we can track accuracy and test loss
-    test_loss, test_accuracy = test(model, test_dataset.take(320).batch(32), loss_func_categorical)
-    test_losses.append(test_loss)
-    test_accuracies.append(test_accuracy)
+        #training (and checking in with training)
+        #ONLY TAKING A TINY FRACTION OF THE DATA!
+
+        epoch_loss_agg = []
+        for input,target in traindata.shuffle(40000).take(320).batch(32):
+            train_loss = train_step(model, input, target, lossfunction, optimizer)
+            trainloss, train_accuracy = test(model, traindata, lossfunction)
+            epoch_loss_agg.append(train_loss)
+
+        #track training loss
+        train_losses.append(tf.reduce_mean(epoch_loss_agg))
+        train_accuracies.append(train_accuracy)
+
+        #testing, so we can track accuracy and test loss
+        test_loss, test_accuracy = test(model, testdata.take(320).batch(32), loss_func_categorical)
+        test_losses.append(test_loss)
+        test_accuracies.append(test_accuracy)
+
+#Run the network
+train(epoch,model,train_dataset,test_dataset,loss_func_categorical,optimizer)
+
+#Visualization
+plt.figure()
+line1, = plt.plot(train_losses)
+line2, = plt.plot(test_losses)
+line3, = plt.plot(train_accuracies)
+line4, = plt.plot(test_accuracies)
+plt.xlabel("Epochs")
+plt.ylabel("Loss/Accuracy")
+plt.legend((line1,line2,line3,line4),("Training Loss","Test Loss","Training Accuracy","Test Accuracy"))
+plt.show()
 
 ## update on 17.11: 
 ## train_step, test methods are copied from lecture jnotebook

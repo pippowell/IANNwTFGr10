@@ -6,9 +6,9 @@ class Network(tf.keras.Model):
         super(Network,self)._init_()
         layers = []
         for i in range(n_layers+1):
-            self.dense = tf.keras.layers.Dense(256,activation=tf.nn.relu)
+            self.dense = Dense(256,activation=tf.nn.relu)
             self.layers.append(self.dense)
-        self.out = tf.keras.layers.Dense(10, activation=tf.nn.softmax)
+        self.out = Dense(10, activation=tf.nn.softmax)
 
     @tf.function
     def call(self,input):
@@ -16,8 +16,6 @@ class Network(tf.keras.Model):
         for i in range(len(layers)+1):
             x = self.layers[i+1](x)
         return x
-
-def train(epoch, model, traindata, testdata, lossfunction, optimizer):
 
 
 
