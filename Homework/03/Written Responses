@@ -1,0 +1,19 @@
+Dataset Info:
+# Number of Training Images: 60000
+# Number of Testing Images: 10000
+# Image Shape: 28,28,1 (28 by 28 images, grayscale)
+# Range of Pixels: 0-255 (grayscale)
+
+Playing w/ Parameters:
+Learning Rate
+Batch Size
+Number of Layers
+Size of Layers
+Optimizer
+SGD Momentum (other than default)
+
+Observations w/ Combos of the Above:
+1.
+2.
+3.
+4.
