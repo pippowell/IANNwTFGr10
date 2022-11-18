@@ -13,7 +13,7 @@ Optimizer
 SGD Momentum (other than default)
 
 Observations w/ Combos of the Above:
-Original: Learning Rate = 0.1, Batch Size = 2*5, Number of Hidden Layers = 2, Size of the Layers = 256 units, Optimizer = SGD, Momentum = 0
+Original: Learning Rate = 0.1, Batch Size = 2*6, Number of Hidden Layers = 2, Size of the Layers = 256 units, Optimizer = SGD, Momentum = 0
 1. Learning Rate = 0.5, Batch Size = 2**8, Number of Layers = 4, Size of the Layers = 128 units, Optimizer = SGD, Momentum = 1
 2. Learning Rate = 0.25, Batch Size = 2**16, Number of Layers = 3, Size of the Layers = 64 units, Optimizer = Adam
 3. Learning Rate = 0.01, Batch Size = 2**4, Number of Layers = 1, Size of the Layers = 512 units, Optimizer = SGD, Momentum = 0.5

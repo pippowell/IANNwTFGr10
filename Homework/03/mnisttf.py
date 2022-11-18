@@ -32,11 +32,11 @@ def prepare_data(dataset):
     dataset = dataset.map(lambda img, target: (img, tf.one_hot(target, depth=10)))
 
     # cache
-    dataset = dataset.take(1000).cache().repeat()
+    dataset = dataset.cache()
 
     # shuffle, batch, prefetch
     dataset = dataset.shuffle(1000)
-    dataset = dataset.batch(2**5)
+    dataset = dataset.batch(2**6)
     dataset = dataset.prefetch(tf.data.AUTOTUNE) 
 
     # return preprocessed dataset
