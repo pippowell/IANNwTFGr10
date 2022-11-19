@@ -1,23 +1,19 @@
 import tensorflow_datasets as tfds
-from tensorflow.keras.layers import Dense
 import tensorflow as tf
-import numpy as np
 
 # 2.1 Load Dataset
 (train_ds, test_ds), ds_info = tfds.load ('mnist', split =['train', 'test'], as_supervised = True, with_info = True)
 
 # print("ds_info: \n", ds_info)
-
-# Dataset Info
-# Number of Training Images: 60000
-# Number of Testing Images: 10000
-# Image Shape: 28,28,1 (28 by 28 images, grayscale)
-# Range of Pixels: 0-255 (grayscale)
-
 # tfds.show_examples(train_ds, ds_info)
 
-# 2.2 Setting up the data pipeline
+# 2.2 Data Pipeline
 def prepare_data(dataset):
+
+    '''
+    :param dataset: the dataset to be prepared for input into the network
+    :return: dataset run through the prep steps below
+    '''
 
     # convert data from uint8 to float32
     dataset = dataset.map(lambda img, target: (tf.cast(img, tf.float32), target))

@@ -1,0 +1,21 @@
+This directory contains our work for IANNwTF HW 3. It contains the following:
+
+mnisttf.py: contains our code for loading and preparing the mnisttf dataset
+
+network.py: contains our code for creating the neural network model with TF
+
+training.py: contains our code for training the created network AND for visualizing results
+
+attemptdynlayer.py: contains our (nonfunctional) code which attempted to allow flexible model creation with desired number of layers
+
+plots (directory): contains the graphs of training and test performance (loss and accuracy) when the model is run with the standard settings and with the other settings we tried
+
+Written Responses: contains our written responses for exercises requiring this
+
+Where to Find What:
+2.1 - mnisttf.py, Written Responses
+2.2 - mnisttf.py
+2.3 - network.py
+2.4 - training.py
+2.5 - training.py
+3 - Written Responses, plots
