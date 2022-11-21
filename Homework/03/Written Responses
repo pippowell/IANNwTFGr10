@@ -15,11 +15,22 @@ SGD Momentum (other than default)
 3 - Adjusting Hyperparameters:
 Original: Learning Rate = 0.1, Batch Size = 2*6, Number of Hidden Layers = 2, Size of the Layers = 256 units, Optimizer = SGD, Momentum = 0
 1. Learning Rate = 0.5, Batch Size = 2**8, Number of Layers = 4, Size of the Layers = 128 units, Optimizer = SGD, Momentum = 1
+: higher loss, lower accuracy
 2. Learning Rate = 0.25, Batch Size = 2**16, Number of Layers = 3, Size of the Layers = 64 units, Optimizer = Adam
+: slightly higher loss, slightly lower accuracy
 3. Learning Rate = 0.01, Batch Size = 2**4, Number of Layers = 1, Size of the Layers = 512 units, Optimizer = SGD, Momentum = 0.5
-4. 1000 Test Samples and 10000 Training: Same general behavior as initial run, perhaps a little more consistent in accuracy after epoch 6.
-5. 4 Hidden Layers: Initial sharp increase in accuracy, followed by holding steady at 97%. Still fluctuates up and down around this point. Test loss sharply increases early in epochs before continuing downward trend.
-6. 1 Hidden Layer, Size 500: Ultimate accuracy is similar to original run (97%), but converges on this accuracy slower.
-7. Learning Rate = 0.01: Slower increase in accuracy and lower ultimate accuracy.
+: very similar to the original loss and accuracy
+4. 1000 Test Samples and 10000 Training
+: Same general behavior as initial run, perhaps a little more consistent in accuracy after epoch 6.
+5. 4 Hidden Layers
+: Initial sharp increase in accuracy, followed by holding steady at 97%. Still fluctuates up and down around this point. Test loss sharply increases early in epochs before continuing downward trend.
+6. 1 Hidden Layer, Size 500
+: Ultimate accuracy is similar to original run (97%), but converges on this accuracy slower.
+7. Learning Rate = 0.01
+: Slower increase in accuracy and lower ultimate accuracy.
+8. Learning Rate = 0.1, Batch Size = 2**6, Number of Layers = 2, Size of the Layers = 64 & 16 units, Optimizer = Adam
+Accuracy around 10% from second epoch and didn't increase 
+9. Learning Rate = 0.1, Batch Size = 2**6, Number of Layers = 2, Size of the Layers = 128 & 64 units, Optimiser = SGD
+Almost like, 2 hidden layers with 128 units in each layer. 
 
 Minimum Requirements: It appears we can achieve decent results even with only one hidden layer (at least with more than 256 units), even if it does take more time to reach higher accuracy in this case.

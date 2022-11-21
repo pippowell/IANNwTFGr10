@@ -140,7 +140,7 @@ def train(epoch, model, traindata, testdata, lossfunction, optimizer):
 train(epoch,model,train_dataset,test_dataset,loss_func_categorical,optimizer)
 
 # 2.5 Visualize results
-plt.figure()
+fig = plt.figure()
 line1, = plt.plot(train_losses)
 line2, = plt.plot(test_losses)
 line3, = plt.plot(train_accuracies)
@@ -148,4 +148,5 @@ line4, = plt.plot(test_accuracies)
 plt.xlabel("Epochs")
 plt.ylabel("Loss/Accuracy")
 plt.legend((line1,line2,line3,line4),("Training Loss","Test Loss","Training Accuracy","Test Accuracy"))
+fig.savefig("Title-Of-The-Figure")
 plt.show()
