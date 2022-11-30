@@ -37,5 +37,3 @@ def prepare_data(dataset):
 
     # return preprocessed dataset
     return dataset
-
-
