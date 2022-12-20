@@ -4,11 +4,38 @@ import numpy as np
 import dataset 
 import model
 import matplotlib.pyplot as plt
+import datetime as datetime
 
+
+# Initiate the logs and metrics
+config_name= "HW06"
+current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+
+train_log_path = f"logs/{config_name}/{current_time}/train"
+val_log_path = f"logs/{config_name}/{current_time}/val"
+
+# log writer for training metrics
+train_summary_writer = tf.summary.create_file_writer(train_log_path)
+
+# log writer for validation metrics
+val_summary_writer = tf.summary.create_file_writer(val_log_path)
+
+# Initiate epochs and learning rate as global variables
+epochs = 2 #15
+learning_rate = 0.05
+
+# Define arrays for saving values for later visualization
+train_forb_norm = []
+train_losses = []
+train_accuracies = []
+
+val_forb_norm = [] # Q. do we need both?
+val_losses = []
+val_accuracies = []
 
 mymodel = model.BasicCNN_LSTM(dataset.sequence_len)
 mymodel.compile(loss=tf.keras.losses.CategoricalCrossentropy(), optimizer="adam")
-original = mymodel.fit(dataset.train_dataset, validation_data=dataset.test_dataset, epochs=2)
+original = mymodel.fit(dataset.train_dataset, validation_data=dataset.test_dataset, epochs=epochs)
 
 fig, ax0 = plt.subplots(1, 1, figsize=(8, 10))
 
