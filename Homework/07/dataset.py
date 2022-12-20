@@ -29,7 +29,6 @@ def preprocess(dataset, batchsize, sequence_len):
     # print(dataset.shape)
     # The output of that lambda function should be a tuple of two tensors of shapes (num_images, height, width, 1) and (num_images, 1) or (num_images,)
 
-
     # Step 3 - Sequence Batching & Batching & Prefetching
     dataset = dataset.batch(sequence_len)
 
@@ -37,25 +36,28 @@ def preprocess(dataset, batchsize, sequence_len):
 
     # alternate positive, negative target values
     range_vals = tf.range(sequence_len)
-    dataset = dataset.map(lambda img, target:
-                          img, tf.from_tensor_slices(target))
 
     dataset = dataset.map(lambda img, target:
-                          img, tf.where(tf.math.floormod(range_vals,2)==0, target, -target))
+                          (img, tf.where(tf.math.floormod(range_vals,2)==0, target, -target)))
 
     dataset = dataset.map(lambda img, target:
-                          img, (tf.math.cumsum(target)))
+                          (img, (tf.math.cumsum(target))))
 
-    #dataset = dataset.batch(batchsize)
-    #dataset = dataset.prefetch(tf.data.AUTOTUNE)
+    # cache
+    dataset = dataset.cache()
+
+    # shuffle, batch, prefetch
+    dataset = dataset.shuffle(1000)
+    dataset = dataset.batch(32)
+    dataset = dataset.prefetch(tf.data.AUTOTUNE)
 
     # The shape of your tensors should be (batch, sequence-length, features).
     return dataset
 
 # Test
 
-train_ds = preprocess(train_ds, 32, 4)
-test_ds = preprocess(test_ds, 32, 4)
+train_ds = preprocess(train_ds, 32, 6)
+test_ds = preprocess(test_ds, 32, 6)
 
 # print(type(train_ds))
 
