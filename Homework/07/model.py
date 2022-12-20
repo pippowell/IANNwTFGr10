@@ -2,12 +2,12 @@
 import tensorflow_datasets as tfds
 import tensorflow as tf
 import numpy as np
-from dataset import shape_ds # shape of the input (batch_size, sequence_length, feature)
+from dataset import shape_ds, sequence_len # shape of the input (batch_size, sequence_length, feature)
 
-print(shape_ds)
+# print(shape_ds)
 
 class BasicCNN_LSTM(tf.keras.Model):
-    def __init__(self, batch, sequence_length, image):
+    def __init__(self, sequence_length):
         super(BasicCNN_LSTM, self).__init__()
 
         # input 32x32x3 with 3 as the color channels

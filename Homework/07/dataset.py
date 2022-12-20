@@ -9,6 +9,7 @@ import numpy as np
 # print("ds_info: \n", ds_info)
 tfds.show_examples(train_ds, ds_info)
 
+sequence_len = 6
 
 def preprocess(dataset, batchsize, sequence_len):
     '''
@@ -61,7 +62,7 @@ test_ds = preprocess(test_ds, 32, 6)
 
 
 for img, label in train_ds.take(1):
-    print(img.shape, label.shape)
+    # print(img.shape, label.shape)
     shape_ds = img.shape
 
 # (bs, num_images, height, width, 1)
