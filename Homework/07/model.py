@@ -2,28 +2,28 @@
 import tensorflow_datasets as tfds
 import tensorflow as tf
 import numpy as np
+from dataset import shape_ds # shape of the input (batch_size, sequence_length, feature)
 
+print(shape_ds)
 
-class BasicConv(tf.keras.Model):
+class BasicCNN_LSTM(tf.keras.Model):
     def __init__(self, batch, sequence_length, image):
-        super(BasicConv, self).__init__()
+        super(BasicCNN_LSTM, self).__init__()
 
         # input 32x32x3 with 3 as the color channels
-        self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu') # after this: 32x32x24
-        # self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu') # 32x32x24
-        # self.convlayer3 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu') # 32x32x24
+        self.convlayer = tf.keras.layers.Conv2D(
+            filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:]) # input_shape(28,28,1)
 
-        # self.pooling = tf.keras.layers.MaxPooling2D(pool_size=2, strides=2) # 16x16x24
+        self.global_pool = tf.keras.layers.GlobalAvgPool2D()
 
-        # self.normlayer = tf.keras.layers.Normalization(axis=-1,mean=None,invert=False)
-
-        # self.convlayer4 = tf.keras.layers.Conv2D(filters=72, kernel_size=3, padding='same', activation='relu') # 16x16x72
-        # self.convlayer5 = tf.keras.layers.Conv2D(filters=72, kernel_size=3, padding='same', activation='relu') # 16x16x72
-        # self.convlayer6 = tf.keras.layers.Conv2D(filters=72, kernel_size=3, padding='same', activation='relu') # 16x16x72
-
-        self.global_pool = tf.keras.layers.GlobalAvgPool2D() # 1x1x72
+        self.timedist = tf.keras.layers.TimeDistributed(self.global_pool)()
 
         # self.out = tf.keras.layers.Dense(10, activation='softmax')
+
+        # lstm ??
+        self.lstm = tf.keras.layers.LSTMCell(sequence_length)
+
+        self.rnn = tf.keras.layers.RNN(self.lstm)()
 
         self.loss_function = tf.keras.losses.CategoricalCrossentropy()
         self.optimizer = tf.keras.optimizers.Adam()
@@ -35,15 +35,10 @@ class BasicConv(tf.keras.Model):
 
     @tf.function
     def call(self, x):
-        x = self.convlayer1(x) ## trying it out as simple as possible
-        # x = self.convlayer2(x)
-        # x = self.convlayer3(x)
-        # x = self.pooling(x)
-        # x = self.convlayer4(x)
-        # x = self.convlayer5(x)
-        # x = self.convlayer6(x)
-        # x = self.global_pool(x)
-        x = tf.keras.layers.TimeDistributed(self.global_pool())(x)
+        x = self.convlayer(x)  # trying it out as simple as possible
+        #x = self.global_pool(x)
+        x = self.timedist(x)
+        x = self.rnn(x)
 
         # Once you have encoded all images as vectors, the shape of the tensor should be (batch, sequence-length, features),
         # which can be fed to a non-convolutional standard LSTM.
@@ -96,3 +91,5 @@ class BasicConv(tf.keras.Model):
 
         # return a dictionary mapping metric names to current value
         return {m.name: m.result() for m in self.metrics}
+
+

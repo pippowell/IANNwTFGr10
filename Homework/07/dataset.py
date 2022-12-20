@@ -48,7 +48,7 @@ def preprocess(dataset, batchsize, sequence_len):
 
     # shuffle, batch, prefetch
     dataset = dataset.shuffle(1000)
-    dataset = dataset.batch(32)
+    dataset = dataset.batch(batchsize)
     dataset = dataset.prefetch(tf.data.AUTOTUNE)
 
     # The shape of your tensors should be (batch, sequence-length, features).
@@ -59,10 +59,10 @@ def preprocess(dataset, batchsize, sequence_len):
 train_ds = preprocess(train_ds, 32, 6)
 test_ds = preprocess(test_ds, 32, 6)
 
-# print(type(train_ds))
 
 for img, label in train_ds.take(1):
-    print(img, label)
+    print(img.shape, label.shape)
+    shape_ds = img.shape
 
 # (bs, num_images, height, width, 1)
 # (bs, num_images, 1)
