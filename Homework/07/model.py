@@ -6,7 +6,7 @@ from dataset import shape_ds, sequence_len # shape of the input (batch_size, seq
 
 class ourlstm(tf.keras.layers.AbstractRNNCell):
 
-    def __init__(self, units, layer_num, **kwargs): # units = units of the weight matrixs in each dense layer = units of the output
+    def __init__(self, units, **kwargs): # units = units of the weight matrixs in each dense layer = units of the output
         super().__init__(**kwargs)
 
         # self.recurrent_units_1 = recurrent_units_1
@@ -63,23 +63,20 @@ class ourlstm(tf.keras.layers.AbstractRNNCell):
         # the new states (e.g. [new hidden state, new cell state])
 
 class BasicCNN_LSTM(tf.keras.Model):
-    def __init__(self, sequence_length):
+    def __init__(self):
         super(BasicCNN_LSTM, self).__init__()
 
         # input 32x32x3 with 3 as the color channels
         self.convlayer = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:]) # input_shape(28,28,1)
 
         self.global_pool = tf.keras.layers.GlobalAvgPool2D()
-        print("111")
         self.timedist = tf.keras.layers.TimeDistributed(self.global_pool)#()
-        print("222")
         # input of lstm: (bs, sequencelen, feature(output of cnn))
 
         # implementing lstm manually ?? - create tf layer (backprop is done by tf)
         # self.lstm = tf.keras.layers.LSTMCell(sequence_length)
-        self.ourlstem = ourlstm()
 
-        self.rnn = tf.keras.layers.RNN(self.ourlstm)()
+        self.rnn = tf.keras.layers.RNN(ourlstm(32)) 
 
         self.loss_function = tf.keras.losses.CategoricalCrossentropy()
         self.optimizer = tf.keras.optimizers.Adam()
@@ -139,5 +136,3 @@ class BasicCNN_LSTM(tf.keras.Model):
 
         # return a dictionary mapping metric names to current value
         return {m.name: m.result() for m in self.metrics}
-
-

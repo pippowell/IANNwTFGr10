@@ -8,7 +8,7 @@ import datetime as datetime
 
 
 # Initiate the logs and metrics
-config_name= "HW06"
+config_name= "HW07"
 current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
 
 train_log_path = f"logs/{config_name}/{current_time}/train"
@@ -29,13 +29,13 @@ train_forb_norm = []
 train_losses = []
 train_accuracies = []
 
-val_forb_norm = [] # Q. do we need both?
+val_forb_norm = [] 
 val_losses = []
 val_accuracies = []
 
-mymodel = model.BasicCNN_LSTM(dataset.sequence_len)
+mymodel = model.BasicCNN_LSTM()
 mymodel.compile(loss=tf.keras.losses.CategoricalCrossentropy(), optimizer="adam")
-original = mymodel.fit(dataset.train_dataset, validation_data=dataset.test_dataset, epochs=epochs)
+original = mymodel.fit(dataset.train_ds, validation_data=dataset.test_ds, epochs=epochs)
 
 fig, ax0 = plt.subplots(1, 1, figsize=(8, 10))
 
