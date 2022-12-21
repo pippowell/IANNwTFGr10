@@ -7,7 +7,7 @@ import numpy as np
 (train_ds, test_ds), ds_info = tfds.load ('mnist', split =['train', 'test'], as_supervised = True, with_info = True)
 
 # print("ds_info: \n", ds_info)
-tfds.show_examples(train_ds, ds_info)
+# tfds.show_examples(train_ds, ds_info)
 
 sequence_len = 6
 
