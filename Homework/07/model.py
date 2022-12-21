@@ -18,12 +18,12 @@ class BasicCNN_LSTM(tf.keras.Model):
 
         self.timedist = tf.keras.layers.TimeDistributed(self.global_pool)()
 
-        # self.out = tf.keras.layers.Dense(10, activation='softmax')
+        # input of lstm: (bs, sequencelen, feature(output of cnn))
 
-        # lstm ??
+        # implementing lstm manually ?? - create tf layer (backprop is done by tf)
         self.lstm = tf.keras.layers.LSTMCell(sequence_length)
 
-        self.rnn = tf.keras.layers.RNN(self.lstm)()
+        self.rnn = tf.keras.layers.RNN(self.lstm)() 
 
         self.loss_function = tf.keras.losses.CategoricalCrossentropy()
         self.optimizer = tf.keras.optimizers.Adam()
