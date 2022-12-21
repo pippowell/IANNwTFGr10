@@ -34,8 +34,10 @@ val_losses = []
 val_accuracies = []
 
 mymodel = model.BasicCNN_LSTM()
-mymodel.compile(loss=tf.keras.losses.CategoricalCrossentropy(), optimizer="adam")
+mymodel.compile(run_eagerly=True) #loss=tf.keras.losses.MeanSquaredError(), optimizer="adam")
 original = mymodel.fit(dataset.train_ds, validation_data=dataset.test_ds, epochs=epochs)
+
+# use eager 
 
 fig, ax0 = plt.subplots(1, 1, figsize=(8, 10))
 
