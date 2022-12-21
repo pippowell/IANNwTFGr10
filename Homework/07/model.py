@@ -70,15 +70,16 @@ class BasicCNN_LSTM(tf.keras.Model):
         self.convlayer = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:]) # input_shape(28,28,1)
 
         self.global_pool = tf.keras.layers.GlobalAvgPool2D()
-
-        self.timedist = tf.keras.layers.TimeDistributed(self.global_pool)()
-
+        print("111")
+        self.timedist = tf.keras.layers.TimeDistributed(self.global_pool)#()
+        print("222")
         # input of lstm: (bs, sequencelen, feature(output of cnn))
 
         # implementing lstm manually ?? - create tf layer (backprop is done by tf)
-        self.lstm = tf.keras.layers.LSTMCell(sequence_length)
+        # self.lstm = tf.keras.layers.LSTMCell(sequence_length)
+        self.ourlstem = ourlstm()
 
-        self.rnn = tf.keras.layers.RNN(self.ourlstm)() 
+        self.rnn = tf.keras.layers.RNN(self.ourlstm)()
 
         self.loss_function = tf.keras.losses.CategoricalCrossentropy()
         self.optimizer = tf.keras.optimizers.Adam()
