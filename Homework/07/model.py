@@ -68,7 +68,9 @@ class BasicCNN_LSTM(tf.keras.Model):
     def __init__(self):
         super(BasicCNN_LSTM, self).__init__()
 
-        self.convlayer = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:]) # input_shape(28,28,1)
+        self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:]) # input_shape(28,28,1)
+        self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:]) # input_shape(28,28,1)
+        self.convlayer3 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:]) # input_shape(28,28,1)
         # more conv layers (take care of vanishing grad)
 
         self.global_pool = tf.keras.layers.GlobalAvgPool2D()
@@ -87,13 +89,14 @@ class BasicCNN_LSTM(tf.keras.Model):
 
         self.metrics_list = [
                     tf.keras.metrics.Mean(name="loss"),
-                    # tf.keras.metrics.BinaryAccuracy(name="acc"), # only for subtask 0, not for subtask 1
-                    # MAD for accuracy 
+                    tf.keras.losses.MeanAbsoluteError(name="acc")
                     ]
 
     # @tf.function # remove when debugging
     def call(self, x):
-        x = self.convlayer(x)  # trying it out as simple as possible
+        x = self.convlayer1(x)
+        x = self.convlayer2(x)
+        x = self.convlayer3(x)
         x = self.timedist(x)
         x = self.rnn(x)
         x = self.output_l(x)
@@ -121,9 +124,9 @@ class BasicCNN_LSTM(tf.keras.Model):
         gradients = tape.gradient(loss, self.trainable_variables)
         self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
 
-        # for all metrics 
-        for metric in self.metrics:
-            metric.update_state(loss) # + tf.reduce_sum(self.losses)
+        # metrics update
+        self.metrics[0].update_state(loss)
+        self.metrics[1].update_state(label, prediction)
 
         # return a dictionary mapping metric names to current value
         return {m.name: m.result() for m in self.metrics}
@@ -136,9 +139,9 @@ class BasicCNN_LSTM(tf.keras.Model):
         prediction = self(img, training=False)
         loss = self.loss_function(label, prediction) # + tf.reduce_sum(self.losses)
 
-        # for all metrics 
-        for metric in self.metrics:
-            metric.update_state(loss) # + tf.reduce_sum(self.losses)
+        # metrics update
+        self.metrics[0].update_state(loss)
+        self.metrics[1].update_state(label, prediction)
 
         # return a dictionary mapping metric names to current value
         return {m.name: m.result() for m in self.metrics}
