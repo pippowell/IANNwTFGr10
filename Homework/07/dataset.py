@@ -4,7 +4,7 @@ import numpy as np
 
 
 # 2.1 Load Dataset
-(train_ds, test_ds), ds_info = tfds.load ('mnist', split =['train', 'test'], as_supervised = True, with_info = True)
+(train_ds, val_ds), ds_info = tfds.load ('mnist', split =['train', 'test'], as_supervised = True, with_info = True)
 
 # print("ds_info: \n", ds_info)
 # tfds.show_examples(train_ds, ds_info)
@@ -58,7 +58,7 @@ def preprocess(dataset, batchsize, sequence_len):
 # Test
 
 train_ds = preprocess(train_ds, 32, 6)
-test_ds = preprocess(test_ds, 32, 6)
+val_ds = preprocess(val_ds, 32, 6)
 
 
 for img, label in train_ds.take(1):

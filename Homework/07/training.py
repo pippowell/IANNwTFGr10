@@ -20,6 +20,7 @@ train_summary_writer = tf.summary.create_file_writer(train_log_path)
 # log writer for validation metrics
 val_summary_writer = tf.summary.create_file_writer(val_log_path)
 
+
 # Initiate epochs and learning rate as global variables
 epochs = 2 #15
 learning_rate = 0.05
@@ -35,7 +36,7 @@ val_accuracies = []
 
 mymodel = model.BasicCNN_LSTM()
 mymodel.compile(run_eagerly=True) #loss=tf.keras.losses.MeanSquaredError(), optimizer="adam")
-original = mymodel.fit(dataset.train_ds, validation_data=dataset.test_ds, epochs=epochs)
+original = mymodel.fit(dataset.train_ds, validation_data=dataset.val_ds, epochs=epochs)
 
 # use eager 
 
@@ -46,3 +47,4 @@ ax0.plot(original.history["total_frobenius_norm"]/np.max(original.history["total
 ax0.plot(original.history["val_loss"])
 ax0.plot(original.history["loss"])
 ax0.legend(labels=["Total Frobenius Norm", "Validation Loss", "Loss"])
+

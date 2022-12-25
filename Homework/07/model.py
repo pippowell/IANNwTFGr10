@@ -68,28 +68,24 @@ class BasicCNN_LSTM(tf.keras.Model):
     def __init__(self):
         super(BasicCNN_LSTM, self).__init__()
 
-        self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:]) # input_shape(28,28,1)
-        self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:]) # input_shape(28,28,1)
-        self.convlayer3 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:]) # input_shape(28,28,1)
+        self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:])
+        self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:])
+        self.convlayer3 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:])
         # more conv layers (take care of vanishing grad)
 
         self.global_pool = tf.keras.layers.GlobalAvgPool2D()
         self.timedist = tf.keras.layers.TimeDistributed(self.global_pool)#()
-        # input of lstm: (bs, sequencelen, feature(output of cnn))
 
-        # implementing lstm manually ?? - create tf layer (backprop is done by tf)
-        # self.lstm = tf.keras.layers.LSTMCell(sequence_length)
+        self.rnn = tf.keras.layers.RNN(ourlstm(8), return_sequences=True) 
 
-        self.rnn = tf.keras.layers.RNN(ourlstm(32), return_sequences=True) #smaller is fine
-
-        self.output_l = tf.keras.layers.Dense(1)
+        self.output_l = tf.keras.layers.Dense(1) # without activation function
 
         self.loss_function = tf.keras.losses.MeanSquaredError()
         self.optimizer = tf.keras.optimizers.Adam()
 
         self.metrics_list = [
                     tf.keras.metrics.Mean(name="loss"),
-                    tf.keras.losses.MeanAbsoluteError(name="acc")
+                    tf.keras.metrics.MeanAbsoluteError(name="acc")
                     ]
 
     # @tf.function # remove when debugging
@@ -147,3 +143,6 @@ class BasicCNN_LSTM(tf.keras.Model):
         return {m.name: m.result() for m in self.metrics}
 
 # output is (32,6,1) and the target is (32,6) -> squeeze the dimension of output, expand the target
+
+# testing
+model = BasicCNN_LSTM()
