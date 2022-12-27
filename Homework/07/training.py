@@ -1,6 +1,4 @@
-import tensorflow_datasets as tfds
 import tensorflow as tf
-import numpy as np
 import dataset 
 import model
 import matplotlib.pyplot as plt
@@ -20,10 +18,6 @@ import datetime as datetime
 # # log writer for validation metrics
 # val_summary_writer = tf.summary.create_file_writer(val_log_path)
 
-
-# Initiate epochs and learning rate as global variables
-epochs = 2 #15
-
 # # Define arrays for saving values for later visualization
 # train_forb_norm = []
 # train_losses = []
@@ -33,42 +27,44 @@ epochs = 2 #15
 # val_losses = []
 # val_accuracies = []
 
-mymodel = model.BasicCNN_LSTM()
-
 # mymodel.compile(run_eagerly=True) 
 
+# Initiate epochs as global variables
+epochs = 2 #15
+
+mymodel = model.BasicCNN_LSTM()
+
 loss = tf.keras.losses.MeanSquaredError()
-opti = tf.keras.optimizers.Adam(learning_rate=0.9) # 1e-3)
+opti = tf.keras.optimizers.Adam(learning_rate=1e-2)
 
 mymodel.compile(loss=loss, 
                 optimizer=opti, 
                 metrics=['MAE']) # for accuracy - instead of tf.keras.metrics.MeanAbsoluteError()
-                                                                        
-print(f"compiled")
-
-EXPERIMENT_NAME = "CNN_LSTM"
-current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-logging_callback = tf.keras.callbacks.TensorBoard(log_dir=f"./logs/{EXPERIMENT_NAME}/{current_time}")
+                      
 
 history = mymodel.fit(dataset.train_ds, 
                     validation_data=dataset.val_ds, 
                     epochs=epochs,
+                    batch_size=dataset.batch_size,
                     callbacks=[logging_callback])
 
-print(f"fitted")
-# first epoch - loss: 34.0686 - MAE: 4.6177
+plt.plot(history.history["loss"])
+plt.plot(history.history["val_loss"])
+plt.plot(history.history["MAE"])
+plt.plot(history.history["val_MAE"])
+plt.legend(labels=["train_loss","val_loss", "train_error(acc)", "val_error(acc)"])
+plt.xlabel("Epoch")
+plt.ylabel("MSE(loss), MAE(acc)")
+plt.show()
+plt.savefig("hw7")
 
-mymodel.save("saved_model")
-# load the model and resume training where we had to stop
-loaded_model = tf.keras.models.load_model("saved_model", custom_objects={"LSTM": model.ourlstm,
-                                                                         "CNN&LSTM": model.BasicCNN_LSTM})
-history.history
+# NEED TO MAKE LOAD_MODEL AND ALL THE SMALL STUFFS WORK
 
-# fig, ax0 = plt.subplots(1, 1, figsize=(8, 10))
+# EXPERIMENT_NAME = "CNN_LSTM"
+# current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+# logging_callback = tf.keras.callbacks.TensorBoard(log_dir=f"./logs/{EXPERIMENT_NAME}/{current_time}")
 
-# ax0.set_title("original")
-# ax0.plot(history.history["total_frobenius_norm"]/np.max(original.history["total_frobenius_norm"]) * np.max(original.history["val_loss"]))
-# ax0.plot(history.history["val_loss"])
-# ax0.plot(history.history["loss"])
-# ax0.legend(labels=["Total Frobenius Norm", "Validation Loss", "Loss"])
-
+# mymodel.save("saved_model hw07")
+# # load the model and resume training where we had to stop
+# loaded_model = tf.keras.models.load_model("/07/saved_model hw07")
+# history.history
