@@ -9,21 +9,13 @@ class ourlstm(tf.keras.layers.AbstractRNNCell):
     def __init__(self, units, **kwargs): # units = units of the weight matrixs in each dense layer = units of the output
         super().__init__(**kwargs)
 
-        # self.recurrent_units_1 = recurrent_units_1
-        # self.recurrent_units_2 = recurrent_units_2
         self.units = units
 
         ##revise layer names
-        self.layer1 = tf.keras.layers.Dense(units, activation='sigmoid')
-        self.layer2 = tf.keras.layers.Dense(units, activation='sigmoid')
-        self.layer3 = tf.keras.layers.Dense(units, activation='tanh')
-        self.layer4 = tf.keras.layers.Dense(units, activation='sigmoid')
-
-        # # layer normalization for trainability
-        # self.layer_norm_1 = tf.keras.layers.LayerNormalization()
-        
-        # # layer normalization for trainability
-        # self.layer_norm_2 = tf.keras.layers.LayerNormalization()
+        self.forgetgate = tf.keras.layers.Dense(units, activation='sigmoid')
+        self.inputgate1 = tf.keras.layers.Dense(units, activation='sigmoid')
+        self.inputgate2 = tf.keras.layers.Dense(units, activation='tanh')
+        self.outputgate = tf.keras.layers.Dense(units, activation='sigmoid')
     
     @property
     def state_size(self):
@@ -45,18 +37,18 @@ class ourlstm(tf.keras.layers.AbstractRNNCell):
         cell_s = states[0]
         hidden_s = states[1]
 
-        concat_value = tf.concat([inputs, hidden_s], axis=-1) # use tuple?
+        concat_value = tf.concat([inputs, hidden_s], axis=-1) # Leon: or use a tuple
 
-        x1 = self.layer1(concat_value)
+        x1 = self.forgetgate(concat_value)
         x1 = tf.math.multiply(x1, cell_s) # or use *
 
-        x2 = self.layer2(concat_value)
-        x3 = self.layer3(concat_value)
+        x2 = self.inputgate1(concat_value)
+        x3 = self.inputgate2(concat_value)
 
         x3 = tf.math.multiply(x2, x3)
         new_cell_s = tf.math.add(x1, x3)
 
-        x4 = self.layer4(concat_value)
+        x4 = self.outputgate(concat_value)
         new_hidden_s = tf.math.multiply(x4, tf.math.tanh(new_cell_s))
 
         return new_hidden_s, (new_hidden_s, new_cell_s)
@@ -71,15 +63,16 @@ class BasicCNN_LSTM(tf.keras.Model):
         self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:])
         self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:])
         self.convlayer3 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:])
-        # more conv layers (take care of vanishing grad)
+        self.batchnorm1 = tf.keras.layers.BatchNormalization()
 
         self.global_pool = tf.keras.layers.GlobalAvgPool2D()
         self.timedist = tf.keras.layers.TimeDistributed(self.global_pool)
 
         self.rnn = tf.keras.layers.RNN(ourlstm(8), return_sequences=True) 
+        self.batchnorm2 = tf.keras.layers.BatchNormalization()
 
-        self.output_l = tf.keras.layers.Dense(1) # without activation function
-
+        self.output_l = tf.keras.layers.Dense(units=1, activation=None) 
+        
         # self.loss_function = tf.keras.losses.MeanSquaredError()
         # self.optimizer = tf.keras.optimizers.Adam()
 
@@ -93,8 +86,10 @@ class BasicCNN_LSTM(tf.keras.Model):
         x = self.convlayer1(x)
         x = self.convlayer2(x)
         x = self.convlayer3(x)
+        x = self.batchnorm1(x)
         x = self.timedist(x)
         x = self.rnn(x)
+        x = self.batchnorm2(x)
         x = self.output_l(x)
 
         # Once you have encoded all images as vectors, the shape of the tensor should be (batch, sequence-length, features),

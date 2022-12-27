@@ -38,7 +38,7 @@ mymodel = model.BasicCNN_LSTM()
 # mymodel.compile(run_eagerly=True) 
 
 loss = tf.keras.losses.MeanSquaredError()
-opti = tf.keras.optimizers.Adam(learning_rate=1e-1)
+opti = tf.keras.optimizers.Adam(learning_rate=1e-1) # 1e-3)
 
 mymodel.compile(loss=loss, 
                 optimizer=opti, 
