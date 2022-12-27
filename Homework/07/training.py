@@ -38,7 +38,7 @@ mymodel = model.BasicCNN_LSTM()
 # mymodel.compile(run_eagerly=True) 
 
 loss = tf.keras.losses.MeanSquaredError()
-opti = tf.keras.optimizers.Adam(learning_rate=1e-1) # 1e-3)
+opti = tf.keras.optimizers.Adam(learning_rate=0.9) # 1e-3)
 
 mymodel.compile(loss=loss, 
                 optimizer=opti, 
@@ -59,6 +59,9 @@ print(f"fitted")
 # first epoch - loss: 34.0686 - MAE: 4.6177
 
 mymodel.save("saved_model")
+# load the model and resume training where we had to stop
+loaded_model = tf.keras.models.load_model("saved_model", custom_objects={"LSTM": model.ourlstm,
+                                                                         "CNN&LSTM": model.BasicCNN_LSTM})
 history.history
 
 # fig, ax0 = plt.subplots(1, 1, figsize=(8, 10))

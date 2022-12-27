@@ -52,6 +52,9 @@ def preprocess(dataset, batchsize, sequence_len):
     dataset = dataset.batch(batchsize)
     dataset = dataset.prefetch(tf.data.AUTOTUNE)
 
+    # for _, label in dataset:
+    #     label = np.expand_dims(label, axis=-1)
+
     # The shape of your tensors should be (batch, sequence-length, features).
     return dataset
 
@@ -62,8 +65,10 @@ val_ds = preprocess(val_ds, 64, 6)
 
 
 for img, label in train_ds.take(1):
-    # print(img.shape, label.shape)
     shape_ds = img.shape
 
-# (bs, num_images, height, width, 1)
-# (bs, num_images, 1)
+    print(img.shape, label.shape) 
+    # (64, 6, 28, 28, 1)                 (64, 6)
+    # (bs, num_images, height, width, 1) (bs, num_images, 1)
+
+    ## Wooki: is the issue here that lable.shape =! (64,6,1)??

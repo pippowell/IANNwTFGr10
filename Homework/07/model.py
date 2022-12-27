@@ -11,11 +11,18 @@ class ourlstm(tf.keras.layers.AbstractRNNCell):
 
         self.units = units
 
-        ##revise layer names
-        self.forgetgate = tf.keras.layers.Dense(units, activation='sigmoid')
-        self.inputgate1 = tf.keras.layers.Dense(units, activation='sigmoid')
-        self.inputgate2 = tf.keras.layers.Dense(units, activation='tanh')
-        self.outputgate = tf.keras.layers.Dense(units, activation='sigmoid')
+        self.forgetgate = tf.keras.layers.Dense(units, 
+                                                kernel_initializer=tf.keras.initializers.Orthogonal(gain=1.0, seed=None), 
+                                                activation='sigmoid')
+        self.inputgate1 = tf.keras.layers.Dense(units, 
+                                                kernel_initializer=tf.keras.initializers.Orthogonal(gain=1.0, seed=None), 
+                                                activation='sigmoid')
+        self.inputgate2 = tf.keras.layers.Dense(units, 
+                                                kernel_initializer=tf.keras.initializers.Orthogonal(gain=1.0, seed=None), 
+                                                activation='tanh')
+        self.outputgate = tf.keras.layers.Dense(units, 
+                                                kernel_initializer=tf.keras.initializers.Orthogonal(gain=1.0, seed=None), 
+                                                activation='sigmoid')
     
     @property
     def state_size(self):
@@ -60,9 +67,9 @@ class BasicCNN_LSTM(tf.keras.Model):
     def __init__(self):
         super(BasicCNN_LSTM, self).__init__()
 
-        self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:])
-        self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:])
-        self.convlayer3 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', input_shape=shape_ds[2:])
+        self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu')#, input_shape=shape_ds[2:])
+        self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu')#, input_shape=shape_ds[2:])
+        self.convlayer3 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu')#, input_shape=shape_ds[2:])
         self.batchnorm1 = tf.keras.layers.BatchNormalization()
 
         self.global_pool = tf.keras.layers.GlobalAvgPool2D()
@@ -71,7 +78,7 @@ class BasicCNN_LSTM(tf.keras.Model):
         self.rnn = tf.keras.layers.RNN(ourlstm(8), return_sequences=True) 
         self.batchnorm2 = tf.keras.layers.BatchNormalization()
 
-        self.output_l = tf.keras.layers.Dense(units=1, activation=None) 
+        self.outputlayer = tf.keras.layers.Dense(units=1, activation=None) 
         
         # self.loss_function = tf.keras.losses.MeanSquaredError()
         # self.optimizer = tf.keras.optimizers.Adam()
@@ -83,18 +90,27 @@ class BasicCNN_LSTM(tf.keras.Model):
 
     # @tf.function # remove when debugging
     def call(self, x):
+        print(f"initial shape: {x.shape}")
         x = self.convlayer1(x)
         x = self.convlayer2(x)
         x = self.convlayer3(x)
+        print(f"shape after cnn: {x.shape}")
         x = self.batchnorm1(x)
-        x = self.timedist(x)
+        x = self.timedist(x) # after this the shape.x should be (bs, sequence-length, image)
+        print(f"shape after timedist&pooling: {x.shape}")
+        
         x = self.rnn(x)
+        print(f"shape after rnn: {x.shape}")
         x = self.batchnorm2(x)
-        x = self.output_l(x)
+        x = self.outputlayer(x)
+        print(f"shape after output: {x.shape}")
 
         # Once you have encoded all images as vectors, the shape of the tensor should be (batch, sequence-length, features),
         # which can be fed to a non-convolutional standard LSTM.
         return x
+
+testmodel = BasicCNN_LSTM()
+# testmodel.summary()
 
     # @property
     # def metrics(self):
@@ -138,6 +154,3 @@ class BasicCNN_LSTM(tf.keras.Model):
     #     return {m.name: m.result() for m in self.metrics}
 
 # output is (32,6,1) and the target is (32,6) -> squeeze the dimension of output, expand the target
-
-# testing
-model = BasicCNN_LSTM()
