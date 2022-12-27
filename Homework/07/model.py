@@ -45,10 +45,10 @@ class ourlstm(tf.keras.layers.AbstractRNNCell):
         cell_s = states[0]
         hidden_s = states[1]
 
-        concat_value = tf.concat([inputs, hidden_s], axis=-1) #use tuple?
+        concat_value = tf.concat([inputs, hidden_s], axis=-1) # use tuple?
 
         x1 = self.layer1(concat_value)
-        x1 = tf.math.multiply(x1, cell_s) #or use *
+        x1 = tf.math.multiply(x1, cell_s) # or use *
 
         x2 = self.layer2(concat_value)
         x3 = self.layer3(concat_value)
@@ -74,19 +74,19 @@ class BasicCNN_LSTM(tf.keras.Model):
         # more conv layers (take care of vanishing grad)
 
         self.global_pool = tf.keras.layers.GlobalAvgPool2D()
-        self.timedist = tf.keras.layers.TimeDistributed(self.global_pool)#()
+        self.timedist = tf.keras.layers.TimeDistributed(self.global_pool)
 
         self.rnn = tf.keras.layers.RNN(ourlstm(8), return_sequences=True) 
 
         self.output_l = tf.keras.layers.Dense(1) # without activation function
 
-        self.loss_function = tf.keras.losses.MeanSquaredError()
-        self.optimizer = tf.keras.optimizers.Adam()
+        # self.loss_function = tf.keras.losses.MeanSquaredError()
+        # self.optimizer = tf.keras.optimizers.Adam()
 
-        self.metrics_list = [
-                    tf.keras.metrics.Mean(name="loss"),
-                    tf.keras.metrics.MeanAbsoluteError(name="acc")
-                    ]
+        # self.metrics_list = [
+        #             tf.keras.metrics.Mean(name="loss"),
+        #             tf.keras.metrics.MeanAbsoluteError(name="acc")
+        #             ]
 
     # @tf.function # remove when debugging
     def call(self, x):
@@ -101,46 +101,46 @@ class BasicCNN_LSTM(tf.keras.Model):
         # which can be fed to a non-convolutional standard LSTM.
         return x
 
-    @property
-    def metrics(self):
-        return self.metrics_list
+    # @property
+    # def metrics(self):
+    #     return self.metrics_list
 
-    def reset_metrics(self):
-        for metric in self.metrics:
-            metric.reset_states()
+    # def reset_metrics(self):
+    #     for metric in self.metrics:
+    #         metric.reset_states()
 
-    # @tf.function
-    def train_step(self, input):
-        img, label = input
+    # # @tf.function
+    # def train_step(self, input):
+    #     img, label = input
 
-        with tf.GradientTape() as tape:
-            prediction = self(img, training=True)
-            loss = self.loss_function(label, prediction)
+    #     with tf.GradientTape() as tape:
+    #         prediction = self(img, training=True)
+    #         loss = self.loss_function(label, prediction)
 
-        gradients = tape.gradient(loss, self.trainable_variables)
-        self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
+    #     gradients = tape.gradient(loss, self.trainable_variables)
+    #     self.optimizer.apply_gradients(zip(gradients, self.trainable_variables))
 
-        # metrics update
-        self.metrics[0].update_state(loss)
-        self.metrics[1].update_state(label, prediction)
+    #     # metrics update
+    #     self.metrics[0].update_state(loss)
+    #     self.metrics[1].update_state(label, prediction)
 
-        # return a dictionary mapping metric names to current value
-        return {m.name: m.result() for m in self.metrics}
+    #     # return a dictionary mapping metric names to current value
+    #     return {m.name: m.result() for m in self.metrics}
 
-    # @tf.function
-    def test_step(self, input):
+    # # @tf.function
+    # def test_step(self, input):
 
-        img, label = input
+    #     img, label = input
 
-        prediction = self(img, training=False)
-        loss = self.loss_function(label, prediction) # + tf.reduce_sum(self.losses)
+    #     prediction = self(img, training=False)
+    #     loss = self.loss_function(label, prediction) # + tf.reduce_sum(self.losses)
 
-        # metrics update
-        self.metrics[0].update_state(loss)
-        self.metrics[1].update_state(label, prediction)
+    #     # metrics update
+    #     self.metrics[0].update_state(loss)
+    #     self.metrics[1].update_state(label, prediction)
 
-        # return a dictionary mapping metric names to current value
-        return {m.name: m.result() for m in self.metrics}
+    #     # return a dictionary mapping metric names to current value
+    #     return {m.name: m.result() for m in self.metrics}
 
 # output is (32,6,1) and the target is (32,6) -> squeeze the dimension of output, expand the target
 

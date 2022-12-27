@@ -57,8 +57,8 @@ def preprocess(dataset, batchsize, sequence_len):
 
 # Test
 
-train_ds = preprocess(train_ds, 32, 6)
-val_ds = preprocess(val_ds, 32, 6)
+train_ds = preprocess(train_ds, 64, 6)
+val_ds = preprocess(val_ds, 64, 6)
 
 
 for img, label in train_ds.take(1):
