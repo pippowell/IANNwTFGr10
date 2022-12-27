@@ -30,7 +30,7 @@ import datetime as datetime
 # mymodel.compile(run_eagerly=True) 
 
 # Initiate epochs as global variables
-epochs = 2 #15
+epochs = 5
 
 mymodel = model.BasicCNN_LSTM()
 
@@ -41,6 +41,9 @@ mymodel.compile(loss=loss,
                 optimizer=opti, 
                 metrics=['MAE']) # for accuracy - instead of tf.keras.metrics.MeanAbsoluteError()
                       
+EXPERIMENT_NAME = "CNN_LSTM"
+current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+logging_callback = tf.keras.callbacks.TensorBoard(log_dir=f"./logs/{EXPERIMENT_NAME}/{current_time}")
 
 history = mymodel.fit(dataset.train_ds, 
                     validation_data=dataset.val_ds, 
@@ -56,13 +59,10 @@ plt.legend(labels=["train_loss","val_loss", "train_error(acc)", "val_error(acc)"
 plt.xlabel("Epoch")
 plt.ylabel("MSE(loss), MAE(acc)")
 plt.show()
-plt.savefig("hw7")
+plt.savefig("e=5, lr=0.01")
 
 # NEED TO MAKE LOAD_MODEL AND ALL THE SMALL STUFFS WORK
 
-# EXPERIMENT_NAME = "CNN_LSTM"
-# current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-# logging_callback = tf.keras.callbacks.TensorBoard(log_dir=f"./logs/{EXPERIMENT_NAME}/{current_time}")
 
 # mymodel.save("saved_model hw07")
 # # load the model and resume training where we had to stop
