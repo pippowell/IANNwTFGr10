@@ -1,6 +1,5 @@
 import tensorflow_datasets as tfds
 import tensorflow as tf
-import numpy as np
 
 
 # 2.1 Load Dataset
@@ -9,6 +8,7 @@ import numpy as np
 # print("ds_info: \n", ds_info)
 # tfds.show_examples(train_ds, ds_info)
 
+batch_size = 64
 sequence_len = 6
 
 def preprocess(dataset, batchsize, sequence_len):
@@ -27,7 +27,6 @@ def preprocess(dataset, batchsize, sequence_len):
     # input normalization, just bringing image values from range [0, 255] to [-1, 1]
     dataset = dataset.map(lambda img, target: ((img / 128.) - 1., target))
 
-    # print(dataset.shape)
     # The output of that lambda function should be a tuple of two tensors of shapes (num_images, height, width, 1) and (num_images, 1) or (num_images,)
 
     # Step 3 - Sequence Batching & Batching & Prefetching
@@ -52,23 +51,24 @@ def preprocess(dataset, batchsize, sequence_len):
     dataset = dataset.batch(batchsize)
     dataset = dataset.prefetch(tf.data.AUTOTUNE)
 
-    # for _, label in dataset:
-    #     label = np.expand_dims(label, axis=-1)
-
     # The shape of your tensors should be (batch, sequence-length, features).
     return dataset
 
-# Test
-
-train_ds = preprocess(train_ds, 64, 6)
-val_ds = preprocess(val_ds, 64, 6)
+def expand_dimension(x, y):
+    return x, tf.expand_dims(y, axis=-1)
 
 
-for img, label in train_ds.take(1):
-    shape_ds = img.shape
+train_ds = preprocess(train_ds, batch_size, 6)
+val_ds = preprocess(val_ds, batch_size, 6)
 
-    print(img.shape, label.shape) 
-    # (64, 6, 28, 28, 1)                 (64, 6)
+train_ds = train_ds.map(expand_dimension)
+val_ds = train_ds.map(expand_dimension)
+
+
+# for img, label in train_ds.take(1):
+#     shape_ds = img.shape
+
+    # print(img.shape, label.shape) 
+    # (64, 6, 28, 28, 1)                 (64, 6, 1)
     # (bs, num_images, height, width, 1) (bs, num_images, 1)
 
-    ## Wooki: is the issue here that lable.shape =! (64,6,1)??

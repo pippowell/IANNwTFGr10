@@ -1,8 +1,6 @@
 
-import tensorflow_datasets as tfds
 import tensorflow as tf
-import numpy as np
-from dataset import shape_ds, sequence_len # shape of the input (batch_size, sequence_length, feature)
+import dataset 
 
 class ourlstm(tf.keras.layers.AbstractRNNCell):
 
@@ -67,9 +65,12 @@ class BasicCNN_LSTM(tf.keras.Model):
     def __init__(self):
         super(BasicCNN_LSTM, self).__init__()
 
-        self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu')#, input_shape=shape_ds[2:])
-        self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu')#, input_shape=shape_ds[2:])
-        self.convlayer3 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu')#, input_shape=shape_ds[2:])
+        self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', 
+                                                batch_input_shape=(dataset.batch_size, dataset.sequence_len, 28, 28, 1))#, input_shape=shape_ds[2:])
+        self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', 
+                                                batch_input_shape=(dataset.batch_size, dataset.sequence_len, 28, 28, 1))#, input_shape=shape_ds[2:])
+        self.convlayer3 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', 
+                                                batch_input_shape=(dataset.batch_size, dataset.sequence_len, 28, 28, 1))#, input_shape=shape_ds[2:])
         self.batchnorm1 = tf.keras.layers.BatchNormalization()
 
         self.global_pool = tf.keras.layers.GlobalAvgPool2D()
@@ -88,26 +89,28 @@ class BasicCNN_LSTM(tf.keras.Model):
         #             tf.keras.metrics.MeanAbsoluteError(name="acc")
         #             ]
 
-    # @tf.function # remove when debugging
+    @tf.function # Leon: comment it out when debugging
     def call(self, x):
-        print(f"initial shape: {x.shape}")
+        # print(f"initial shape: {x.shape}")
         x = self.convlayer1(x)
         x = self.convlayer2(x)
         x = self.convlayer3(x)
-        print(f"shape after cnn: {x.shape}")
+        # print(f"shape after cnn: {x.shape}")
+        
         x = self.batchnorm1(x)
         x = self.timedist(x) # after this the shape.x should be (bs, sequence-length, features) before LSTM
-        print(f"shape after timedist&pooling: {x.shape}")
-        
+        # print(f"shape after timedist&pooling: {x.shape}")
+
         x = self.rnn(x)
-        print(f"shape after rnn: {x.shape}")
+        # print(f"shape after rnn: {x.shape}")
+        
         x = self.batchnorm2(x)
         x = self.outputlayer(x)
-        print(f"shape after output: {x.shape}")
+        # print(f"shape after output: {x.shape}")
 
         return x
 
-testmodel = BasicCNN_LSTM()
+# testmodel = BasicCNN_LSTM()
 # testmodel.summary()
 
     # @property
@@ -151,4 +154,4 @@ testmodel = BasicCNN_LSTM()
     #     # return a dictionary mapping metric names to current value
     #     return {m.name: m.result() for m in self.metrics}
 
-# output is (32,6,1) and the target is (32,6) -> squeeze the dimension of output, expand the target
+
