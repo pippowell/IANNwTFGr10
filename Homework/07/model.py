@@ -96,7 +96,7 @@ class BasicCNN_LSTM(tf.keras.Model):
         x = self.convlayer3(x)
         print(f"shape after cnn: {x.shape}")
         x = self.batchnorm1(x)
-        x = self.timedist(x) # after this the shape.x should be (bs, sequence-length, image)
+        x = self.timedist(x) # after this the shape.x should be (bs, sequence-length, features) before LSTM
         print(f"shape after timedist&pooling: {x.shape}")
         
         x = self.rnn(x)
@@ -105,8 +105,6 @@ class BasicCNN_LSTM(tf.keras.Model):
         x = self.outputlayer(x)
         print(f"shape after output: {x.shape}")
 
-        # Once you have encoded all images as vectors, the shape of the tensor should be (batch, sequence-length, features),
-        # which can be fed to a non-convolutional standard LSTM.
         return x
 
 testmodel = BasicCNN_LSTM()
