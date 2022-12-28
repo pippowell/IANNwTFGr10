@@ -29,7 +29,7 @@ def preprocess(dataset, batchsize, sequence_len):
 
     # The output of that lambda function should be a tuple of two tensors of shapes (num_images, height, width, 1) and (num_images, 1) or (num_images,)
 
-    # Step 3 - Sequence Batching & Batching & Prefetching
+    # Step 3 - Sequence Batching & Shuffling & Batching & Prefetching
     dataset = dataset.batch(sequence_len)
 
     # change the target

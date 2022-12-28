@@ -4,52 +4,31 @@ import model
 import matplotlib.pyplot as plt
 import datetime as datetime
 
-
-# # Initiate the logs and metrics
-# config_name= "HW07"
-# current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-
-# train_log_path = f"logs/{config_name}/{current_time}/train"
-# val_log_path = f"logs/{config_name}/{current_time}/val"
-
-# # log writer for training metrics
-# train_summary_writer = tf.summary.create_file_writer(train_log_path)
-
-# # log writer for validation metrics
-# val_summary_writer = tf.summary.create_file_writer(val_log_path)
-
-# # Define arrays for saving values for later visualization
-# train_forb_norm = []
-# train_losses = []
-# train_accuracies = []
-
-# val_forb_norm = [] 
-# val_losses = []
-# val_accuracies = []
-
-# mymodel.compile(run_eagerly=True) 
-
-# Initiate epochs as global variables
-epochs = 5
+# Initiate epochs and learing rate as global variables
+epochs = 1
+lr = 1e-2
 
 mymodel = model.BasicCNN_LSTM()
 
 loss = tf.keras.losses.MeanSquaredError()
-opti = tf.keras.optimizers.Adam(learning_rate=1e-2)
+opti = tf.keras.optimizers.Adam(learning_rate=lr)
 
 mymodel.compile(loss=loss, 
                 optimizer=opti, 
                 metrics=['MAE']) # for accuracy - instead of tf.keras.metrics.MeanAbsoluteError()
                       
+# save logs with Tensorboard
 EXPERIMENT_NAME = "CNN_LSTM"
 current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-logging_callback = tf.keras.callbacks.TensorBoard(log_dir=f"./logs/{EXPERIMENT_NAME}/{current_time}")
+logging_callback = tf.keras.callbacks.TensorBoard(log_dir=f".Homework/07/logs/{EXPERIMENT_NAME}/{current_time}")
 
 history = mymodel.fit(dataset.train_ds, 
                     validation_data=dataset.val_ds, 
                     epochs=epochs,
                     batch_size=dataset.batch_size,
                     callbacks=[logging_callback])
+
+# mymodel.load_weights(checkpoint_filepath)
 
 plt.plot(history.history["loss"])
 plt.plot(history.history["val_loss"])
@@ -58,13 +37,19 @@ plt.plot(history.history["val_MAE"])
 plt.legend(labels=["train_loss","val_loss", "train_error(acc)", "val_error(acc)"])
 plt.xlabel("Epoch")
 plt.ylabel("MSE(loss), MAE(acc)")
+plt.savefig(f"testing: e={epochs},lr={lr}.png")
 plt.show()
-plt.savefig("e=5, lr=0.01")
 
-# NEED TO MAKE LOAD_MODEL AND ALL THE SMALL STUFFS WORK
+# save configs (e.g. hyperparameters) of your settings
+# checkpoint your model’s weights (or even the complete model
+mymodel.save('Homework/07/my_model07')
+new_model = tf.keras.models.load_model('Homework/07/my_model07', custom_objects={"LSTM": model.ourlstm,
+                                                                                 "CNN&LSTM": model.BasicCNN_LSTM})
 
 
-# mymodel.save("saved_model hw07")
-# # load the model and resume training where we had to stop
-# loaded_model = tf.keras.models.load_model("/07/saved_model hw07")
-# history.history
+# try checkpoint when there's time:
+# checkpoint_filepath = 'checkpoint.hdf5'
+# model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_filepath,
+#                                                                 save_weights_only=True,
+#                                                                 monitor='val_accuracy',
+                                                                # save_best_only=True)
