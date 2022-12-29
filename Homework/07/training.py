@@ -43,6 +43,7 @@ plt.show()
 # save configs (e.g. hyperparameters) of your settings
 # checkpoint your model’s weights (or even the complete model
 mymodel.save('Homework/07/my_model07')
+#mymodel.save('my_model07')
 new_model = tf.keras.models.load_model('Homework/07/my_model07', custom_objects={"LSTM": model.ourlstm,
                                                                                  "CNN&LSTM": model.BasicCNN_LSTM})
 
