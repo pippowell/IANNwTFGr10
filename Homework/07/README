@@ -1,6 +1,0 @@
-## order of compiling the files
-
-1. dataset.py
-2. model.py
-3. training.py
-4. load_model.py
