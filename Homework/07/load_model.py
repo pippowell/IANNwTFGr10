@@ -11,5 +11,5 @@ dir = hw_directory + '/' + model_folder
 new_model = tf.keras.models.load_model(dir, custom_objects={"ourlstm": model.ourlstm,
                                                             "BasicCNN_LSTM": model.BasicCNN_LSTM})
 
-# model summary
+# model summary 
 new_model.summary()
