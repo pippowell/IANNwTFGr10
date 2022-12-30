@@ -38,7 +38,7 @@ plt.plot(history.history["val_MAE"])
 plt.legend(labels=["train_loss","val_loss", "train_error(acc)", "val_error(acc)"])
 plt.xlabel("Epoch")
 plt.ylabel("MSE(loss), MAE(acc)")
-plt.savefig(f"testing: e={epochs},lr={lr}.png")
+#plt.savefig(f"testing: e={epochs},lr={lr}.png")
 plt.show()
 
 # save configs (e.g. hyperparameters) of your settings
