@@ -2,9 +2,10 @@
 import tensorflow as tf
 import dataset 
 
+
 class ourlstm(tf.keras.layers.AbstractRNNCell):
 
-    def __init__(self, units, **kwargs): # units = units of the weight matrixs in each dense layer = units of the output
+    def __init__(self, units, **kwargs):  # units = units of the weight matrixs in each dense layer = units of the output
         super().__init__(**kwargs)
 
         self.units = units
@@ -26,6 +27,7 @@ class ourlstm(tf.keras.layers.AbstractRNNCell):
     def state_size(self):
         return [tf.TensorShape([self.units]), 
                 tf.TensorShape([self.units])]
+
     @property
     def output_size(self):
         return [tf.TensorShape([self.units])]
@@ -85,7 +87,7 @@ class BasicCNN_LSTM(tf.keras.Model):
 
         self.outputlayer = tf.keras.layers.Dense(units=1, activation=None) 
         
-    @tf.function # Leon: comment it out when debugging
+    @tf.function  # Leon: comment it out when debugging
     def call(self, x):
         # print(f"initial shape: {x.shape}")
         x = self.convlayer1(x)

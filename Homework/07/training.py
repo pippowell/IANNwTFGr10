@@ -3,8 +3,9 @@ import dataset
 import model
 import matplotlib.pyplot as plt
 import datetime as datetime
+from pathlib import Path
 
-# Initiate epochs and learing rate as global variables
+# Initiate epochs and learning rate as global variables
 epochs = 1
 lr = 1e-2
 
@@ -15,7 +16,7 @@ opti = tf.keras.optimizers.Adam(learning_rate=lr)
 
 mymodel.compile(loss=loss, 
                 optimizer=opti, 
-                metrics=['MAE']) # for accuracy - instead of tf.keras.metrics.MeanAbsoluteError()
+                metrics=['MAE'])  # for accuracy - instead of tf.keras.metrics.MeanAbsoluteError()
                       
 # save logs with Tensorboard
 EXPERIMENT_NAME = "CNN_LSTM"
@@ -41,11 +42,17 @@ plt.savefig(f"testing: e={epochs},lr={lr}.png")
 plt.show()
 
 # save configs (e.g. hyperparameters) of your settings
-# checkpoint your model’s weights (or even the complete model
-mymodel.save('Homework/07/my_model07')
-#mymodel.save('my_model07')
-new_model = tf.keras.models.load_model('Homework/07/my_model07', custom_objects={"LSTM": model.ourlstm,
-                                                                                 "CNN&LSTM": model.BasicCNN_LSTM})
+# checkpoint your model’s weights (or even the complete model)
+
+hw_directory = str(Path(__file__).parents[0])
+model_folder = 'my_model07'
+
+dir = hw_directory + '/' + model_folder
+
+mymodel.save(dir)
+
+new_model = tf.keras.models.load_model(dir, custom_objects={"LSTM": model.ourlstm,
+                                                            "CNN&LSTM": model.BasicCNN_LSTM})
 
 
 # try checkpoint when there's time:

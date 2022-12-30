@@ -3,7 +3,7 @@ import tensorflow as tf
 
 
 # 2.1 Load Dataset
-(train_ds, val_ds), ds_info = tfds.load ('mnist', split =['train', 'test'], as_supervised = True, with_info = True)
+(train_ds, val_ds), ds_info = tfds.load('mnist', split=['train', 'test'], as_supervised=True, with_info=True)
 
 # print("ds_info: \n", ds_info)
 # tfds.show_examples(train_ds, ds_info)
@@ -20,7 +20,6 @@ def preprocess(dataset, batchsize, sequence_len):
     '''
 
     # Step 1 - General Preprocessing
-
     # convert data from uint8 to float32
     dataset = dataset.map(lambda img, target: (tf.cast(img, tf.float32), target))
 
@@ -29,11 +28,10 @@ def preprocess(dataset, batchsize, sequence_len):
 
     # The output of that lambda function should be a tuple of two tensors of shapes (num_images, height, width, 1) and (num_images, 1) or (num_images,)
 
-    # Step 3 - Sequence Batching & Shuffling & Batching & Prefetching
+    # Step 2 - Sequence Batching, Create Targets, Shuffling, Batching & Prefetching
     dataset = dataset.batch(sequence_len)
 
     # change the target
-
     # alternate positive, negative target values
     range_vals = tf.range(sequence_len)
 
@@ -54,6 +52,7 @@ def preprocess(dataset, batchsize, sequence_len):
     # The shape of your tensors should be (batch, sequence-length, features).
     return dataset
 
+
 def expand_dimension(x, y):
     return x, tf.expand_dims(y, axis=-1)
 
@@ -68,7 +67,7 @@ val_ds = train_ds.map(expand_dimension)
 # for img, label in train_ds.take(1):
 #     shape_ds = img.shape
 
-    # print(img.shape, label.shape) 
-    # (64, 6, 28, 28, 1)                 (64, 6, 1)
-    # (bs, num_images, height, width, 1) (bs, num_images, 1)
+# print(img.shape, label.shape)
+# (64, 6, 28, 28, 1)                 (64, 6, 1)
+# (bs, num_images, height, width, 1) (bs, num_images, 1)
 
