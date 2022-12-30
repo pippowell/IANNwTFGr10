@@ -8,8 +8,8 @@ model_folder = 'my_model07'
 dir = hw_directory + '/' + model_folder
 
 # loading the model
-new_model = tf.keras.models.load_model(dir, custom_objects={"ourlstm": model.ourlstm,
-                                                            "BasicCNN_LSTM": model.BasicCNN_LSTM})
+model = tf.keras.models.load_model(dir, custom_objects={"ourlstm": model.ourlstm,
+                                                        "BasicCNN_LSTM": model.BasicCNN_LSTM})
 
 # model summary 
-new_model.summary()
+model.summary()
