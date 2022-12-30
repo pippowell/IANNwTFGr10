@@ -49,7 +49,7 @@ def preprocess(dataset, batchsize, sequence_len):
     dataset = dataset.batch(batchsize)
     dataset = dataset.prefetch(tf.data.AUTOTUNE)
 
-    # The shape of your tensors should be (batch, sequence-length, features).
+    # The shape of the tensors should be (batch, sequence-length, features).
     return dataset
 
 

@@ -89,25 +89,16 @@ class BasicCNN_LSTM(tf.keras.Model):
         
     @tf.function  # Leon: comment it out when debugging
     def call(self, x):
-        # print(f"initial shape: {x.shape}")
         x = self.convlayer1(x)
         x = self.convlayer2(x)
         x = self.convlayer3(x)
-        # print(f"shape after cnn: {x.shape}")
         
         x = self.batchnorm1(x)
-        x = self.timedist(x) 
-        # print(f"shape after timedist&pooling: {x.shape}") # shape should be (bs, sequence-length, features) before LSTM
+        x = self.timedist(x) # Here, the shape should be (bs, sequence-length, features) before LSTM
 
         x = self.rnn(x)
-        # print(f"shape after rnn: {x.shape}")
-        
+                
         x = self.batchnorm2(x)
         x = self.outputlayer(x)
-        # print(f"shape after output: {x.shape}")
-
+        
         return x
-
-# # testing
-# testmodel = ourlstm(10)
-# print(testmodel.get_config())

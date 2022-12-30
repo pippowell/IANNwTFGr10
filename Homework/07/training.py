@@ -29,8 +29,6 @@ history = mymodel.fit(dataset.train_ds,
                     batch_size=dataset.batch_size,
                     callbacks=[logging_callback])
 
-# mymodel.load_weights(checkpoint_filepath)
-
 plt.plot(history.history["loss"])
 plt.plot(history.history["val_loss"])
 plt.plot(history.history["MAE"])
@@ -42,8 +40,6 @@ plt.ylabel("MSE(loss), MAE(acc)")
 plt.show()
 
 # save configs (e.g. hyperparameters) of your settings
-# checkpoint your model’s weights (or even the complete model)
-
 hw_directory = str(Path(__file__).parents[0])
 model_folder = 'my_model07'
 
@@ -52,7 +48,9 @@ dir = hw_directory + '/' + model_folder
 mymodel.save(dir)
 
 
-# try checkpoint when there's time:
+# checkpoint your model’s weights (or even the complete model)
+# mymodel.load_weights(checkpoint_filepath)
+# try out checkpoint when there's time:
 # checkpoint_filepath = 'checkpoint.hdf5'
 # model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_filepath,
 #                                                                 save_weights_only=True,
