@@ -13,4 +13,4 @@ In the main model, we will feed the dataset through the CNN layers with some opt
 : We use compile and fit methods to train the model for default 15 epochs and with 1e-2 learning rate. Corresponding plots are saved in the folder "plots" in the same directory as this README.md.
 
 4. load_model.py
-: 
+: Script to load the trained model (my_model07). Model was trained for 15 Epochs and 0.001 learning rate.
