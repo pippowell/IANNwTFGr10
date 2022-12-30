@@ -3,6 +3,7 @@
 
 # folder 
 .idea/
+.Homework/
 
 # python files
 *.pyc
