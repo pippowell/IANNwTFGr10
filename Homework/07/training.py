@@ -6,7 +6,7 @@ import datetime as datetime
 from pathlib import Path
 
 # Initiate epochs and learning rate as global variables
-epochs = 1
+epochs = 15
 lr = 1e-2
 
 mymodel = model.BasicCNN_LSTM()
@@ -50,9 +50,6 @@ model_folder = 'my_model07'
 dir = hw_directory + '/' + model_folder
 
 mymodel.save(dir)
-
-new_model = tf.keras.models.load_model(dir, custom_objects={"LSTM": model.ourlstm,
-                                                            "CNN&LSTM": model.BasicCNN_LSTM})
 
 
 # try checkpoint when there's time:
