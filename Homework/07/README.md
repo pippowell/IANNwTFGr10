@@ -1,8 +1,7 @@
 # CNN + LSTM
-Our model identifies a number in a 28x28 image through CNN layers. Then the numbers in sequence will be fed into the LSTM layer in order to be computed as such:
-if the sequence is [4,1,0,7], then after the computation it is [+4=4, 4-1=3, 3+0=3, 3-7=-4] 
+Through the CNN layers our model identifies numbers in 28x28 images from the MNIST dataset. Then the numbers in sequence will be fed into the LSTM layer in order to be computed as such: if the sequence is [4,1,0,7], then after the computation it is [+4=4, 4-1=3, 3+0=3, 3-7=-4] 
 
-## order of running the files
+## The order of running the files
 1. dataset.py
 : We define a method to preprocess the mnist dataset. The most important feature of the preprocessing is the double batching (for sequence_length and for batch)
 
