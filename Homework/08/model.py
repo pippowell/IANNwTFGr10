@@ -6,15 +6,15 @@ class encoder(tf.keras.Model):
         super(encoder, self).__init__()
 
         # convolutional layers with stride 1 followed by a pooling layer
-        self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', stride=1)
-        self.maxpool1 = tf. tf.keras.layers.MaxPool2D(pool_size=(2,2), padding='same')
+        self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', strides=1)
+        self.maxpool1 = tf.keras.layers.MaxPool2D(pool_size=(2,2), padding='same')
         
-        self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', stride=1)
+        self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', strides=1)
         self.maxpool2 = tf.keras.layers.MaxPool2D(pool_size=(2,2), padding='same')
         
         # flatten the feature maps and use a dense layer to produce an embedding of a certain size
         self.flatten =  tf.keras.layers.Flatten()
-        self.output = tf.keras.layers.Dense(embedding, activation='relu')
+        self.output_layer = tf.keras.layers.Dense(embedding, activation='relu')
 
     def __call__(self, input):
 
@@ -23,7 +23,7 @@ class encoder(tf.keras.Model):
         x = self.convlayer2(x)
         x = self.maxpool2(x)
         x = self.flatten(x)
-        x = self.output(x)
+        x = self.output_layer(x)
 
         return x
 
@@ -38,11 +38,11 @@ class decoder(tf.keras.Model):
         self.reshape_layer = tf.keras.layers.Reshape((28, 28))
 
         # Use upsampling or transposed convolutions to mirror your encoder.
-        self.convTlayer1 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', stride=1)
-        self.convTlayer2 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', stride=1)
+        self.convTlayer1 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', strides=1)
+        self.convTlayer2 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', strides=1)
         
         # As an output layer, use a convolutional layer with one filter and sigmoid activation to produce an output image
-        self.output = tf.keras.layers.Conv2D(filters=1, activation='sigmoid')
+        self.output_layer = tf.keras.layers.Conv2D(filters=1, kernel_size=3, activation='sigmoid')
 
     def __call__(self, input):
 
@@ -50,7 +50,7 @@ class decoder(tf.keras.Model):
             x = self.reshape_layer(x)
             x = self.convTlayer1(x)
             x = self.convTlayer2(x)
-            x = self.output(x)
+            x = self.output_layer(x)
 
             return x
 
@@ -68,3 +68,4 @@ class autoencoder(tf.keras.Model):
         
         return decoded
 
+testmodel = autoencoder()
