@@ -48,5 +48,5 @@ def preprocess(dataset):
 noisy_train_ds = preprocess(train_ds) # shape=(None, 28, 28, 28, 1)
 noisy_test_ds = preprocess(test_ds) # shape=(None, 28, 28, 28, 1)
 
-print(f"preprocessed train_ds: {noisy_train_ds}") 
-print(f"preprocessed test_ds: {noisy_test_ds}")
+# print(f"preprocessed train_ds: {noisy_train_ds}") 
+# print(f"preprocessed test_ds: {noisy_test_ds}")
