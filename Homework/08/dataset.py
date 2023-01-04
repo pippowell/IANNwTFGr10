@@ -30,23 +30,26 @@ def preprocess(dataset):
     for img, _ in dataset.take(1):
         img_shape = img.shape
 
+    noise_factor = 0.5
+
     # Add noise to the input image
-    noise = tf.random.normal(shape=img_shape, mean=mean, stddev=stddev, dtype=tf.dtypes.float32) # noise.shape = (28, 28, 1)
-    # print(f"noise: {noise.shape}")
-    dataset = dataset.map(lambda img, target: (tf.clip_by_value(img + noise, clip_value_min=-1, clip_value_max=1), target)) # shape=(28, 28, 28, 1)
+    dataset = dataset.map(lambda img, target: (img + noise_factor*tf.random.normal(shape=img_shape, mean=mean, stddev=stddev, dtype=tf.dtypes.float32), target))
+    dataset = dataset.map(lambda img, target: (tf.clip_by_value(img, clip_value_min=-1, clip_value_max=1), target)) # shape=(28, 28, 1, 1)
+    # print(f"after noise: {dataset}")
 
     # Cache, shuffle, batch, prefetch
     dataset = dataset.cache()
     dataset = dataset.shuffle(1000)
     # print(f"before batch: {dataset}")
-    dataset = dataset.batch(batchsize) # shape=(None, 28, 28, 28, 1)
+
+    # dataset = dataset.batch(batchsize) # shape=(None, 28, 28, 1)
     # print(f"after batch: {dataset}")
     dataset = dataset.prefetch(tf.data.AUTOTUNE)
 
     return dataset
 
-noisy_train_ds = preprocess(train_ds) # shape=(None, 28, 28, 28, 1)
-noisy_test_ds = preprocess(test_ds) # shape=(None, 28, 28, 28, 1)
+noisy_train_ds = preprocess(train_ds) # shape=(None, 28, 28, 1, 1)
+noisy_test_ds = preprocess(test_ds) # shape=(None, 28, 28, 1, 1)
 
 # print(f"preprocessed train_ds: {noisy_train_ds}") 
 # print(f"preprocessed test_ds: {noisy_test_ds}")
