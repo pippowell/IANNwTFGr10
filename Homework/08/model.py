@@ -39,9 +39,10 @@ class decoder(tf.keras.Model):
 
         # Reshape the resulting vector into feature maps
         self.reshape_layer = tf.keras.layers.Reshape((28, 28))
-
+        
         # Use upsampling or transposed convolutions to mirror your encoder.
         self.convTlayer1 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', strides=1) # shape=
+        
         self.convTlayer2 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', strides=1) # shape=
         
         # As an output layer, use a convolutional layer with one filter and sigmoid activation to produce an output image
@@ -49,9 +50,13 @@ class decoder(tf.keras.Model):
 
     def __call__(self, input):
 
-            x = self.restore_di_layer(input)
-            x = self.reshape_layer(x)
+            x = self.restore_di_layer(input) 
+            # x = self.reshape_layer(x)
+            print(f"done until reshape_layer")
+
             x = self.convTlayer1(x)
+            print(f"done until convTlayer1")
+
             x = self.convTlayer2(x)
             x = self.output_layer(x)
 
@@ -65,7 +70,7 @@ class autoencoder(tf.keras.Model):
         self.encoder = encoder(embedding=10)
         self.decoder = decoder()
 
-    def __call__(self, input):
+    def __call__(self, input, training=False):
         
         encoded = self.encoder(input)
         decoded = self.decoder(encoded) 
