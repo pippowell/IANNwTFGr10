@@ -1,5 +1,4 @@
 import tensorflow as tf
-import dataset 
 
 class encoder(tf.keras.Model):
     def __init__(self, embedding):
@@ -14,14 +13,16 @@ class encoder(tf.keras.Model):
         # use convolutional layers with stride 2 for subsampling
         self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', strides=2) # shape=(14,14,48)
         self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', strides=2) # shape=(7,7,48)
-        
-        # flatten the feature maps and use a dense layer to produce an embedding of a certain size
-        self.flatten =  tf.keras.layers.Flatten()
-        self.output_layer = tf.keras.layers.Dense(embedding, activation='relu')
+        self.batchnorm1 = tf.keras.layers.BatchNormalization()
+
+        # flatten the feature maps and use a dense layer to produce an embedding of a certain size - in our case: 10
+        self.flatten =  tf.keras.layers.Flatten() # shape=(2352,1)
+        self.output_layer = tf.keras.layers.Dense(embedding, activation='relu') # shape=(10,1)
 
     def __call__(self, input):
 
         x = self.convlayer1(input)
+        x = self.batchnorm1(x)
         # x = self.maxpool1(x)
         x = self.convlayer2(x)
         # x = self.maxpool2(x)
@@ -34,31 +35,37 @@ class decoder(tf.keras.Model):
     def __init__(self):
         super(decoder, self).__init__()
 
-        # Use a dense layer to restore the dimensionality of the flattened feature maps from the encode
-        self.restore_di_layer = tf.keras.layers.Dense(784, activation='sigmoid')
+        # Use a dense layer to restore the dimensionality of the flattened feature maps from the encoder
+        self.restore_di_layer = tf.keras.layers.Dense(784, activation='sigmoid') # shape=(784,1)
 
         # Reshape the resulting vector into feature maps
-        self.reshape_layer = tf.keras.layers.Reshape((28, 28))
+        self.reshape_layer = tf.keras.layers.Reshape((28, 28, 1)) 
         
         # Use upsampling or transposed convolutions to mirror your encoder.
-        self.convTlayer1 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', strides=1) # shape=
+        self.convTlayer1 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', strides=1) 
         
-        self.convTlayer2 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', strides=1) # shape=
+        self.convTlayer2 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', strides=1) 
+        self.batchnorm1 = tf.keras.layers.BatchNormalization()
         
         # As an output layer, use a convolutional layer with one filter and sigmoid activation to produce an output image
-        self.output_layer = tf.keras.layers.Conv2D(filters=1, kernel_size=3, activation='sigmoid')
+        self.output_layer = tf.keras.layers.Conv2D(filters=1, kernel_size=3, padding='same', strides=1, activation='sigmoid')
 
     def __call__(self, input):
 
-            x = self.restore_di_layer(input) 
-            # x = self.reshape_layer(x)
-            print(f"done until reshape_layer")
+            x = self.restore_di_layer(input) # shape=(bs,784)
+            x = self.reshape_layer(x) # shape=(bs,28,28,1)
+            # print(f"done until reshape_layer: {x}")
 
-            x = self.convTlayer1(x)
-            print(f"done until convTlayer1")
+            x = self.convTlayer1(x) # shape=(ns,28,28,48)
+            # print(f"done until convTlayer1: {x}")
 
-            x = self.convTlayer2(x)
-            x = self.output_layer(x)
+            x = self.convTlayer2(x) # shape=(ns,28,28,48)
+            # print(f"done until convTlayer2: {x}")
+
+            x = self.batchnorm1(x)
+
+            x = self.output_layer(x) # (bs,28,28,1)
+            # print(f"done until outputlayer: {x}")
 
             return x
 
@@ -77,4 +84,4 @@ class autoencoder(tf.keras.Model):
         
         return decoded
 
-testmodel = autoencoder()
+# testmodel = autoencoder()
