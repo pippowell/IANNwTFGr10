@@ -12,7 +12,7 @@ lr = 1e-3
 
 ae = model.autoencoder()
 
-loss = tf.keras.losses.BinaryCrossentropy()
+loss = tf.keras.losses.MSE()
 opti = tf.keras.optimizers.Adam(learning_rate=lr)
 
 ae.compile(loss=loss, optimizer=opti)
@@ -40,5 +40,4 @@ for x, _ in dataset.test_ds: test_x.append(x)
 
 ae.fit(x=noisy_train_x, y=train_x, validation_data=(noisy_test_x, test_x), epochs=epochs)
 # this part not working!!
-
 print("training done")
