@@ -1,43 +1,44 @@
 import tensorflow as tf
-import dataset 
+import dataset
 import model
 import matplotlib.pyplot as plt
 import datetime as datetime
 from pathlib import Path
-import numpy as np
 
 # Initiate epochs and learning rate as global variables
-epochs = 2 # 10
+epochs = 5
 lr = 1e-3
 
 ae = model.autoencoder()
 
-loss = tf.keras.losses.MSE()
+loss = tf.keras.losses.MeanSquaredError() # tf.keras.losses.BinaryCrossentropy()
 opti = tf.keras.optimizers.Adam(learning_rate=lr)
+
+# save logs with Tensorboard
+EXPERIMENT_NAME = "CNN_LSTM"
+current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+logging_callback = tf.keras.callbacks.TensorBoard(log_dir=f".Homework/07/logs/{EXPERIMENT_NAME}/{current_time}")
 
 ae.compile(loss=loss, optimizer=opti)
 
-# noisy_train_x, _ = dataset.noisy_train_ds
-# train_x, _ = dataset.train_ds
+history = ae.fit(dataset.noisy_train_ds, 
+                validation_data=dataset.noisy_test_ds, 
+                epochs=epochs, 
+                callbacks=[logging_callback])
 
-# noisy_test_x, _ = dataset.noisy_test_ds
-# test_x, _ = dataset.test_ds
+# plotting
+plt.plot(history.history["loss"])
+plt.plot(history.history["val_loss"])
+plt.legend(labels=["train_loss","val_loss"])
+plt.xlabel("Epoch")
+plt.ylabel("MSE(loss)")
+plt.savefig(f"e={epochs},lr={lr}.png")
+plt.show()
 
-noisy_train_x = list()
-noisy_test_x = list()
-train_x = list()
-test_x = list()
+# # save configs (e.g. hyperparameters) of your settings
+# hw_directory = str(Path(__file__).parents[0])
+# model_folder = 'my_model07'
 
-for x, _ in dataset.noisy_train_ds: noisy_train_x.append(x)
-for x, _ in dataset.noisy_test_ds: noisy_test_x.append(x)
-for x, _ in dataset.train_ds: train_x.append(x)
-for x, _ in dataset.test_ds: test_x.append(x)
+# dir = hw_directory + '/' + model_folder
 
-# print(f"noisy_train_x: {len(noisy_train_x)}")
-# print(f"train_x: {len(train_x)}")
-# print(f"noisy_test_x: {len(noisy_test_x)}")
-# print(f"test_x: {len(test_x)}")
-
-ae.fit(x=noisy_train_x, y=train_x, validation_data=(noisy_test_x, test_x), epochs=epochs)
-# this part not working!!
-print("training done")
+# ae.save(dir)
