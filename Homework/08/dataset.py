@@ -7,8 +7,8 @@ import tensorflow as tf
 # (img_train, _), (img_test, _) = tf.keras.datasets.mnist.load_data()
 
 train_ds, test_ds = tfds.load('mnist', split=['train', 'test'], as_supervised=True)
-print(f"train_ds: {train_ds}") # shape=(28, 28, 1)
-print(f"test_ds: {test_ds}") # shape=(28, 28, 1)
+# print(f"train_ds: {train_ds}") # shape=(28, 28, 1)
+# print(f"test_ds: {test_ds}") # shape=(28, 28, 1)
 
 # Introduce a hyperparameter to control how noisy your data will be
 mean = 0.5
