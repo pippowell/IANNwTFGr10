@@ -1,6 +1,7 @@
 import tensorflow_datasets as tfds
 import tensorflow as tf
 # import numpy as np
+import matplotlib.pyplot as plt
 
 
 # Load the dataset and construct a tf.Data.Dateset for testing and training using the images only
@@ -52,10 +53,22 @@ def preprocess(dataset):
 noisy_train_ds = preprocess(train_ds) # shape=(None, 28, 28, 1, 1)
 noisy_test_ds = preprocess(test_ds) # shape=(None, 28, 28, 1, 1)
 
+# Check the shape
 for noisy, original in noisy_train_ds.take(1):
     print(noisy.shape)
     print(original.shape)
 
+# to visualize the input and noisy target image
+# Get the first element in the dataset
+noisy_image, original_image = next(iter((noisy_train_ds.take(1))))
+
+# Display the noisy image
+plt.imshow(noisy_image[0])
+plt.show()
+
+# Display the original image
+plt.imshow(original_image[0])
+plt.show()
 
 # print(f"noisy_train_ds: {noisy_train_ds}") # shape=(28, 28, 1)
 # print(f"noisy_test_ds: {noisy_test_ds}") # shape=(28, 28, 1)
