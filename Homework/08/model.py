@@ -32,7 +32,7 @@ class encoder(tf.keras.Model):
         return x
 
 class decoder(tf.keras.Model):
-    def __init__(self):
+    def __init__(self, vae=False):
         super(decoder, self).__init__()
 
         # Use a dense layer to restore the dimensionality of the flattened feature maps from the encoder
@@ -47,8 +47,15 @@ class decoder(tf.keras.Model):
         self.convTlayer2 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', strides=1) 
         self.batchnorm1 = tf.keras.layers.BatchNormalization()
         
-        # As an output layer, use a convolutional layer with one filter and sigmoid activation to produce an output image
-        self.output_layer = tf.keras.layers.Conv2D(filters=1, kernel_size=3, padding='same', strides=1, activation='sigmoid')
+        # if we are using a general autoencoder
+        if vae == False: 
+            # As an output layer, use a convolutional layer with one filter and sigmoid activation to produce an output image
+            self.output_layer = tf.keras.layers.Conv2D(filters=1, kernel_size=3, padding='same', strides=1, activation='sigmoid')
+
+        # if we are using a variational autoencoder 
+        elif:
+            pass
+
 
     def __call__(self, input):
 
