@@ -18,12 +18,9 @@ class encoder(tf.keras.Model):
         # flatten the feature maps and use a dense layer to produce an embedding of a certain size - in our case: 10
         self.flatten =  tf.keras.layers.Flatten() # shape=(2352,1)
 
-        if vae == False: 
-            self.output_layer = tf.keras.layers.Dense(embedding, activation='relu') # shape=(10,1)
+        self.output_layer = tf.keras.layers.Dense(embedding, activation='relu') # shape=(10,1)
 
-        # if we are using a variational autoencoder 
-        elif: 
-            pass
+        # if we are using a variational autoencoder
 
     def __call__(self, input):
 

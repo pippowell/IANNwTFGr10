@@ -18,12 +18,12 @@ batchsize = 32
 def preprocess(dataset):
 
     # Normalize the images and make sure that you have sensible dimensions
-    dataset = dataset.map(lambda img, _: (tf.cast(img, tf.float32), img))
-    dataset = dataset.map(lambda img, target_img: ((img / 128.) - 1., target_img)) # shape=(28, 28, 1)
+    dataset = dataset.map(lambda img, _: (tf.cast(img, tf.float32), tf.cast(img, tf.float32)))
+    dataset = dataset.map(lambda img, target_img: ((img / 128.) - 1., (target_img / 128.) - 1)) # shape=(28, 28, 1)
     # print(f"after norm: {dataset}")
 
     # Add a third dimension
-    dataset =  dataset.map(lambda img, target_img: (tf.expand_dims(img, axis=-1, name=None), target_img)) # shape=(28, 28, 1, 1)
+    # dataset =  dataset.map(lambda img, target_img: (tf.expand_dims(img, axis=-1, name=None), target_img)) # shape=(28, 28, 1, 1)
     # print(f"after dimension expansion: {dataset}")
 
     # get img shape before adding noise to image
@@ -31,9 +31,10 @@ def preprocess(dataset):
         img_shape = img.shape
 
     noise_factor = 0.5
-
+    # create noise to be added to image
+    noise = noise_factor*tf.random.normal(shape=img_shape, mean=mean, stddev=stddev, dtype=tf.dtypes.float32)
     # Add noise to the input image
-    dataset = dataset.map(lambda img, target_img: (img + noise_factor*tf.random.normal(shape=img_shape, mean=mean, stddev=stddev, dtype=tf.dtypes.float32), target_img))
+    dataset = dataset.map(lambda img, target_img: (img + noise, target_img))
     dataset = dataset.map(lambda img, target_img: (tf.clip_by_value(img, clip_value_min=-1, clip_value_max=1), target_img)) # shape=(28, 28, 1, 1)
     # print(f"after noise: {dataset}")
 
@@ -50,6 +51,11 @@ def preprocess(dataset):
 
 noisy_train_ds = preprocess(train_ds) # shape=(None, 28, 28, 1, 1)
 noisy_test_ds = preprocess(test_ds) # shape=(None, 28, 28, 1, 1)
+
+for noisy, original in noisy_train_ds.take(1):
+    print(noisy.shape)
+    print(original.shape)
+
 
 # print(f"noisy_train_ds: {noisy_train_ds}") # shape=(28, 28, 1)
 # print(f"noisy_test_ds: {noisy_test_ds}") # shape=(28, 28, 1)

@@ -6,7 +6,7 @@ import datetime as datetime
 from pathlib import Path
 
 # Initiate epochs and learning rate as global variables
-epochs = 5
+epochs = 2
 lr = 1e-3
 
 ae = model.autoencoder()
