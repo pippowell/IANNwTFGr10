@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 class encoder(tf.keras.Model):
-    def __init__(self, embedding):
+    def __init__(self, embedding, vae=False):
         super(encoder, self).__init__()
 
         # convolutional layers with stride 1 followed by a pooling layer
@@ -17,7 +17,13 @@ class encoder(tf.keras.Model):
 
         # flatten the feature maps and use a dense layer to produce an embedding of a certain size - in our case: 10
         self.flatten =  tf.keras.layers.Flatten() # shape=(2352,1)
-        self.output_layer = tf.keras.layers.Dense(embedding, activation='relu') # shape=(10,1)
+
+        if vae == False: 
+            self.output_layer = tf.keras.layers.Dense(embedding, activation='relu') # shape=(10,1)
+
+        # if we are using a variational autoencoder 
+        elif: 
+            pass
 
     def __call__(self, input):
 
@@ -32,7 +38,7 @@ class encoder(tf.keras.Model):
         return x
 
 class decoder(tf.keras.Model):
-    def __init__(self, vae=False):
+    def __init__(self):
         super(decoder, self).__init__()
 
         # Use a dense layer to restore the dimensionality of the flattened feature maps from the encoder
@@ -47,15 +53,8 @@ class decoder(tf.keras.Model):
         self.convTlayer2 = tf.keras.layers.Conv2DTranspose(filters=48, kernel_size=3, padding='same', activation='relu', strides=1) 
         self.batchnorm1 = tf.keras.layers.BatchNormalization()
         
-        # if we are using a general autoencoder
-        if vae == False: 
-            # As an output layer, use a convolutional layer with one filter and sigmoid activation to produce an output image
-            self.output_layer = tf.keras.layers.Conv2D(filters=1, kernel_size=3, padding='same', strides=1, activation='sigmoid')
-
-        # if we are using a variational autoencoder 
-        elif:
-            pass
-
+        # As an output layer, use a convolutional layer with one filter and sigmoid activation to produce an output image
+        self.output_layer = tf.keras.layers.Conv2D(filters=1, kernel_size=3, padding='same', strides=1, activation='sigmoid')
 
     def __call__(self, input):
 
@@ -81,7 +80,7 @@ class autoencoder(tf.keras.Model):
         super(autoencoder, self).__init__()
 
         # Define separate models for the encoder and decoder and initialize them in the autoencoder constructor
-        self.encoder = encoder(embedding=10)
+        self.encoder = encoder(embedding=10, vae=False)
         self.decoder = decoder()
 
     def __call__(self, input, training=False):
