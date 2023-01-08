@@ -1,4 +1,5 @@
 import tensorflow as tf
+from keras import backend as K
 
 class encoder(tf.keras.Model):
     def __init__(self, embedding, vae=False):
@@ -18,7 +19,22 @@ class encoder(tf.keras.Model):
         # flatten the feature maps and use a dense layer to produce an embedding of a certain size - in our case: 10
         self.flatten =  tf.keras.layers.Flatten() # shape=(2352,1)
 
-        self.output_layer = tf.keras.layers.Dense(embedding, activation='relu') # shape=(10,1)
+
+        if vae==True:
+            z_mean = tf.keras.layers.Dense(embedding)
+            z_log_sigma = tf.keras.layers.Dense(embedding)
+
+            def sampling(args):
+                z_mean, z_log_sigma = args
+                epsilon = K.random_normal(shape=(K.shape(z_mean)[0], embedding),
+                                        mean=0., stddev=0.1)
+                return z_mean + K.exp(z_log_sigma) * epsilon
+
+            self.output_layer = tf.keras.layers.Lambda(sampling)([z_mean, z_log_sigma])
+
+        else: 
+            self.output_layer = tf.keras.layers.Dense(embedding, activation='relu') # shape=(10,1)
+            
 
         # if we are using a variational autoencoder
 
@@ -73,11 +89,11 @@ class decoder(tf.keras.Model):
             return x
 
 class autoencoder(tf.keras.Model): 
-    def __init__(self):
+    def __init__(self, vae=False):
         super(autoencoder, self).__init__()
 
         # Define separate models for the encoder and decoder and initialize them in the autoencoder constructor
-        self.encoder = encoder(embedding=10, vae=False)
+        self.encoder = encoder(embedding=10, vae=vae)
         self.decoder = decoder()
 
     def __call__(self, input, training=False):
@@ -87,4 +103,4 @@ class autoencoder(tf.keras.Model):
         
         return decoded
 
-# testmodel = autoencoder()
+testmodel = autoencoder()
