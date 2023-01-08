@@ -9,7 +9,8 @@ from pathlib import Path
 epochs = 2
 lr = 1e-3
 
-ae = model.autoencoder()
+ae = model.autoencoder(vae=False)
+vae = model.autoencoder(vae=True)
 
 loss = tf.keras.losses.MeanSquaredError() # tf.keras.losses.BinaryCrossentropy()
 opti = tf.keras.optimizers.Adam(learning_rate=lr)
