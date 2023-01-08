@@ -1,8 +1,13 @@
 import tensorflow as tf
 from keras import backend as K
 
+# global var
+embedding = 10
+zmean = tf.keras.layers.Dense(embedding)
+zlogvar = tf.keras.layers.Dense(embedding)
+
 class encoder(tf.keras.Model):
-    def __init__(self, embedding, vae=False):
+    def __init__(self, embedding=embedding, vae=False):
         super(encoder, self).__init__()
 
         # convolutional layers with stride 1 followed by a pooling layer
@@ -10,6 +15,8 @@ class encoder(tf.keras.Model):
         # self.maxpool1 = tf.keras.layers.MaxPool2D(pool_size=(2,2), padding='same')
         # self.convlayer2 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', strides=1)
         # self.maxpool2 = tf.keras.layers.MaxPool2D(pool_size=(2,2), padding='same')
+
+        self.vae = vae
 
         # use convolutional layers with stride 2 for subsampling
         self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', strides=2) # shape=(14,14,48)
@@ -19,34 +26,85 @@ class encoder(tf.keras.Model):
         # flatten the feature maps and use a dense layer to produce an embedding of a certain size - in our case: 10
         self.flatten =  tf.keras.layers.Flatten() # shape=(2352,1)
 
+        
 
         if vae==True:
-            z_mean = tf.keras.layers.Dense(embedding)
-            z_log_sigma = tf.keras.layers.Dense(embedding)
+            self.z_mean = zmean
+            self.z_log_var  = zlogvar
 
+            ## option 1
             def sampling(args):
-                z_mean, z_log_sigma = args
+                z_mean, z_log_var = args
                 epsilon = K.random_normal(shape=(K.shape(z_mean)[0], embedding),
                                         mean=0., stddev=0.1)
-                return z_mean + K.exp(z_log_sigma) * epsilon
+                return z_mean + K.exp(z_log_var) * epsilon
 
-            self.output_layer = tf.keras.layers.Lambda(sampling)([z_mean, z_log_sigma])
+            self.output_layer = tf.keras.layers.Lambda(sampling)
+
+            ### option 2
+            # class Sampling(tf.keras.layers.Layer):
+            #     """Uses (z_mean, z_log_var) to sample z, the vector encoding a digit."""
+
+            #     def call(self, inputs):
+            #         z_mean, z_log_var  = inputs
+            #         batch = tf.shape(z_mean)[0]
+            #         dim = tf.shape(z_mean)[1]
+            #         epsilon = tf.keras.backend.random_normal(shape=(batch, dim))
+                    
+            #         return z_mean + tf.exp(0.5 * z_log_var) * epsilon
+
+            # self.output_layer = Sampling()([z_mean, z_log_var])
+
+            ### option 3
+            # class KLDivergenceLayer(Layer):
+            #     """ Identity transform layer that adds KL divergence
+            #     to the final model loss.
+            #     """
+
+            #     def __init__(self, *args, **kwargs):
+            #         self.is_placeholder = True
+            #         super(KLDivergenceLayer, self).__init__(*args, **kwargs)
+
+            #     def call(self, inputs):
+
+            #         mu, log_var = inputs
+
+            #         kl_batch = - .5 * K.sum(1 + log_var -
+            #                                 K.square(mu) -
+            #                                 K.exp(log_var), axis=-1)
+
+            #         self.add_loss(K.mean(kl_batch), inputs=inputs)
+
+            #         return inputs
+
+            # z_mu, z_log_var = KLDivergenceLayer()([z_mean, z_log_var])
+
+            # # normalize log variance to std dev
+            # z_sigma = tf.keras.layers.Lambda(lambda t: K.exp(.5*t))(z_log_var)
+
+            # eps = Input(tensor=K.random_normal(shape=(K.shape(x)[0], embedding)))
+            # z_eps = Multiply()([z_sigma, eps])
+
+            # self.output_layer = Add()([z_mu, z_eps])
+
 
         else: 
             self.output_layer = tf.keras.layers.Dense(embedding, activation='relu') # shape=(10,1)
             
-
-        # if we are using a variational autoencoder
-
     def __call__(self, input):
-
         x = self.convlayer1(input)
         x = self.batchnorm1(x)
         # x = self.maxpool1(x)
         x = self.convlayer2(x)
         # x = self.maxpool2(x)
         x = self.flatten(x)
-        x = self.output_layer(x)
+
+        if self.vae==True:
+            z_mean = self.z_mean(x)
+            z_log_var = self.z_log_var(x)
+            x = self.output_layer(([z_mean, z_log_var]))
+        else:
+            x = self.output_layer(x)
 
         return x
 
@@ -102,5 +160,5 @@ class autoencoder(tf.keras.Model):
         decoded = self.decoder(encoded) 
         
         return decoded
-
-testmodel = autoencoder()
+    
+# testmodel = autoencoder(vae=True)
