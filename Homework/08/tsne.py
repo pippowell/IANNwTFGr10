@@ -23,5 +23,5 @@ tsne_result_df = pd.DataFrame({'tsne_1': tsne_result[:,0], 'tsne_2': tsne_result
 plt.figure(figsize=(10,8))
 sns.scatterplot(x='tsne_1', y='tsne_2', hue='label', data=tsne_result_df)
 plt.title("t-SNE with mnist_784")
-plt.savefig("Homework/08/t-sne_mnist784")
+plt.savefig("Homework/08/plot/t-sne_mnist784")
 plt.show()
