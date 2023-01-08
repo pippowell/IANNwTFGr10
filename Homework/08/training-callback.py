@@ -22,42 +22,32 @@ logging_callback = tf.keras.callbacks.TensorBoard(log_dir=f".Homework/07/logs/{E
 
 ae.compile(loss=loss, optimizer=opti)
 
-# custom Callback for visualization
 class CustomCallback(keras.callbacks.Callback):
-    def __init__(self, train=dataset.noisy_train_ds, validation=dataset.noisy_test_ds):
+    def __init__(self, validation_data):
         super(CustomCallback, self).__init__()
-        self.validation = validation
-        self.train = train
-    def on_test_batch_begin(self, batch=dataset.batchsize,logs=None):
-        if (self.validation):
-            x_valid, y_valid = self.validation[0], self.validation[1]
-            y_val_pred = self.model.predict(x_valid)
-            print(x_valid, y_val_pred)
-        # if self.validation is None:
-        #     print("a")
-        # else:
-        #     # Get the validation data
-        #     x_val, y_val = self.validation_data
-        #     print("b")
-        # # Make predictions on the validation data
-        # predictions = self.model.predict(x_val)
-        #
-        # # Loop over the predictions
-        # for prediction, label in zip(predictions, y_val):
-        #     # Display the prediction and the label
-        #     plt.imshow(prediction[0])
-        #     plt.title(label[0])
-        #     plt.show()
+        self.validation_data = validation_data
 
-    # def on_test_batch_end(self, batch, logs=None):
-    #         print("12")
+    def on_epoch_end(self, epoch, logs={}):
+        batches = len(self.validation_data)  # 1. Get the amount of batches the generator provides
+        # .. other code
+        for batch in range(batches):  # 2. Iterate over the amount of batches
+            xVal, label = next(iter(self.validation_data))  # 3. Retrieve a batch
+            if batch % 50 == 0:
+                predictions = self.model.predict(xVal) # This one is not correct (probably)
+                zipped = zip(predictions, label)
+                for i, (prediction, label) in enumerate(zipped):
+                    # Display the prediction and the label
+                    fig, ax = plt.subplots(nrows=1, ncols=2)
+                    ax[0].imshow(prediction)
+                    ax[1].imshow(label)
+                    plt.show()
 
 
 
 history = ae.fit(dataset.noisy_train_ds, 
                 validation_data=dataset.noisy_test_ds, 
                 epochs=epochs, 
-                callbacks=[CustomCallback()]) #[logging_callback])
+                callbacks=[CustomCallback(dataset.noisy_test_ds)]) #[logging_callback])
 
 # plotting
 plt.plot(history.history["loss"])
