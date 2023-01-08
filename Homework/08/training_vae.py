@@ -146,7 +146,10 @@ plt.ylabel("Loss")
 plt.savefig(f"Homework/08/plot/VAE:e={epochs},lr={lr}.png")
 plt.show()
 
-# reference taken here: https://blog.paperspace.com/how-to-build-variational-autoencoder-keras/ 
+# reference taken here: 
+# for vae2: https://blog.paperspace.com/how-to-build-variational-autoencoder-keras/ 
+# in general: https://blog.keras.io/building-autoencoders-in-keras.html, https://keras.io/examples/generative/vae/, https://github.com/keras-team/keras/blob/2.1.1/examples/variational_autoencoder.py
+
 
 
 # def mse_loss(y_true, y_pred):
