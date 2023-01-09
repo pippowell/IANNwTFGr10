@@ -28,7 +28,7 @@ history = ae.fit(dataset.noisy_train_ds,
                 epochs=epochs, 
                 callbacks=[logging_callback])
 
-ae.save('my_ae')
+ae.save(f"Homework/08/my_ae")
 
 # plotting
 #plt.plot(history.history["loss"])
