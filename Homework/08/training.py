@@ -4,9 +4,6 @@ import model
 import matplotlib.pyplot as plt
 import datetime as datetime
 from pathlib import Path
-from sklearn.manifold import TSNE
-import pandas as pd
-import seaborn as sns
 
 # Initiate epochs and learning rate as global variables
 epochs = 1
