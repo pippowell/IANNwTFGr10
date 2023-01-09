@@ -40,10 +40,10 @@ def preprocess(dataset):
 
     dataset = dataset.prefetch(tf.data.AUTOTUNE)
 
-    return dataset, labels
+    return dataset, labels, noisy_img
 
-noisy_train_ds, trainlabels = preprocess(train_ds) # shape=(None, 28, 28, 1), (None, 28, 28, 1), (None)
-noisy_test_ds, testlabels = preprocess(test_ds) # shape=(None, 28, 28, 1), (None, 28, 28, 1), (None)
+noisy_train_ds, labels_train, noisy_img_train = preprocess(train_ds) # shape=(None, 28, 28, 1), (None, 28, 28, 1), (None)
+noisy_test_ds, labels_test, noisy_img_test = preprocess(test_ds) # shape=(None, 28, 28, 1), (None, 28, 28, 1), (None)
 
 # noisy_img_train, target_img_train, labels_train = preprocess(train_ds)
 # noisy_img_test, target_img_test, labels_test = preprocess(train_ds)
