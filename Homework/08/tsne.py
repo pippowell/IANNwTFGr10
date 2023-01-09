@@ -6,7 +6,7 @@ import pandas as pd
 import seaborn as sns
 from keras.datasets import mnist
 
-ae_reload = tf.keras.models.load_model('Homework/08/my_model:e=15,lr=1e-3')
+ae_reload = tf.keras.models.load_model('Homework/08/my_model')
 
 tsne = TSNE(n_components=2)
 
@@ -14,9 +14,17 @@ tsne = TSNE(n_components=2)
 # test_ds = dataset.noisy_img_train.with_format("tf")
 # y = dataset.labels_test
 
+# preprocessing of test dataset (seperate from dataset.preprocessing)
 (_, _), (test_X, test_Y) = mnist.load_data()
 test_X = tf.expand_dims(test_X, axis=-1)
 test_X = tf.cast(test_X, tf.float32)
+test_X = (test_X / 128.) - 1
+
+noise_factor = 0.5
+noise = noise_factor*tf.random.normal(shape=test_X.shape, mean=0.5, stddev=0.5, dtype=tf.dtypes.float32)
+test_X = test_X + noise
+
+test_X = tf.clip_by_value(test_X, clip_value_min=-1, clip_value_max=1)
 test_X = test_X[:1000]
 
 ae_encoder = ae_reload.encoder
