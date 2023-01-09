@@ -89,7 +89,8 @@ class encoder(tf.keras.Model):
 
         else: 
             self.output_layer = tf.keras.layers.Dense(embedding, activation='relu') # shape=(10,1)
-            
+
+    @tf.function
     def call(self, input):
         x = self.convlayer1(input)
         x = self.batchnorm1(x)
@@ -124,6 +125,7 @@ class decoder(tf.keras.Model):
         # As an output layer, use a convolutional layer with one filter and sigmoid activation to produce an output image
         self.output_layer = tf.keras.layers.Conv2D(filters=1, kernel_size=3, padding='same', strides=1, activation='sigmoid')
 
+    @tf.function
     def call(self, input):
 
             x = self.restore_di_layer(input) # shape=(bs,784)
@@ -143,6 +145,7 @@ class autoencoder(tf.keras.Model):
         self.encoder = encoder(embedding=10, vae=vae)
         self.decoder = decoder()
 
+    @tf.function
     def call(self, input, training=False):
         
         encoded = self.encoder(input)
