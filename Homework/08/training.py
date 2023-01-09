@@ -30,7 +30,7 @@ history = ae.fit(dataset.noisy_train_ds,
                 epochs=epochs, 
                 callbacks=[logging_callback])
 
-
+## trying out tsne here
 tsne = TSNE(n_components=2)
 
 # test_1000 = dataset.noisy_img_test[:1000]
