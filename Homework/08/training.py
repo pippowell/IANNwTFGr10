@@ -6,11 +6,11 @@ import datetime as datetime
 from pathlib import Path
 
 # Initiate epochs and learning rate as global variables
-epochs = 1
-lr = 0.99
+epochs = 15
+lr = 1e-3
 
 ae = model.autoencoder(vae=False)
-vae = model.autoencoder(vae=True)
+# vae = model.autoencoder(vae=True)
 
 loss = tf.keras.losses.MeanSquaredError()
 opti = tf.keras.optimizers.Adam(learning_rate=lr)
@@ -29,20 +29,20 @@ history = ae.fit(dataset.noisy_train_ds,
 
 # save configs (e.g. hyperparameters) of your settings
 hw_directory = str(Path(__file__).parents[0])
-model_folder = 'my_model08'
+model_folder = 'my_model'
 
 dir = hw_directory + '/' + model_folder
 
 ae.save(dir)
 
 # plotting
-#plt.plot(history.history["loss"])
-#plt.plot(history.history["val_loss"])
-#plt.legend(labels=["train_loss","val_loss"])
-#plt.xlabel("Epoch")
-#plt.ylabel("MSE(loss)")
-#plt.savefig(f"Homework/08/plot/e={epochs},lr={lr}.png")
-#plt.show()
+# plt.plot(history.history["loss"])
+# plt.plot(history.history["val_loss"])
+# plt.legend(labels=["train_loss","val_loss"])
+# plt.xlabel("Epoch")
+# plt.ylabel("MSE(loss)")
+# plt.savefig(f"Homework/08/plot/e={epochs},lr={lr}.png")
+# plt.show()
 
 # # save configs (e.g. hyperparameters) of your settings
 # hw_directory = str(Path(__file__).parents[0])
