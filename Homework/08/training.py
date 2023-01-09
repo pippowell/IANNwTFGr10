@@ -4,13 +4,9 @@ import model
 import matplotlib.pyplot as plt
 import datetime as datetime
 from pathlib import Path
-<<<<<<< HEAD
 from sklearn.manifold import TSNE
 import pandas as pd
 import seaborn as sns
-=======
-#from sklearn.manifold import TSNE
->>>>>>> 5409687c7903276c2f543e72a1bd5fff4b096191
 
 # Initiate epochs and learning rate as global variables
 epochs = 1
@@ -25,7 +21,7 @@ opti = tf.keras.optimizers.Adam(learning_rate=lr)
 # save logs with Tensorboard
 EXPERIMENT_NAME = "CNN_LSTM"
 current_time = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-logging_callback = tf.keras.callbacks.TensorBoard(log_dir=f".Homework/07/logs/{EXPERIMENT_NAME}/{current_time}")
+logging_callback = tf.keras.callbacks.TensorBoard(log_dir=f".Homework/08/logs/{EXPERIMENT_NAME}/{current_time}")
 
 ae.compile(loss=loss, optimizer=opti)
 
@@ -34,30 +30,6 @@ history = ae.fit(dataset.noisy_train_ds,
                 epochs=epochs, 
                 callbacks=[logging_callback])
 
-<<<<<<< HEAD
-## trying out tsne here
-tsne = TSNE(n_components=2)
-
-# test_1000 = dataset.noisy_img_test[:1000]
-y = dataset.labels_test
-
-ae_encoding = ae.encoder(dataset.noisy_img_test)
-
-tsne_result = tsne.fit_transform(ae_encoding)
-
-# Plot the result of our TSNE with the label color coded
-tsne_result_df = pd.DataFrame({'tsne_1': tsne_result[:,0], 'tsne_2': tsne_result[:,1], 'label': y[:1000]})
-
-plt.figure(figsize=(10,8))
-sns.scatterplot(x='tsne_1', y='tsne_2', hue='label', data=tsne_result_df)
-plt.title("t-SNE with ae")
-plt.savefig("Homework/08/plot/t-sne_w_ae")
-plt.show()
-
-tf.keras.models.save_model(ae, f"Homework/08/my_ae")
-=======
-
-
 # save configs (e.g. hyperparameters) of your settings
 hw_directory = str(Path(__file__).parents[0])
 model_folder = 'my_model08'
@@ -65,7 +37,6 @@ model_folder = 'my_model08'
 dir = hw_directory + '/' + model_folder
 
 ae.save(dir)
->>>>>>> 5409687c7903276c2f543e72a1bd5fff4b096191
 
 # plotting
 #plt.plot(history.history["loss"])
