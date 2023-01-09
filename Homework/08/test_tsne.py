@@ -1,17 +1,21 @@
 import tensorflow as tf
 import dataset
+import datasetwlabel
 import matplotlib.pyplot as plt
 from sklearn.manifold import TSNE
 import pandas as pd
 import seaborn as sns
 
-ae_reload = tf.keras.models.load_model('my_ae')
+
+
+ae_reload = tf.keras.models.load_model('Homework/08/my_ae')
 
 tsne = TSNE(n_components=2)
 
-dataset = dataset.noisy_test_ds[:1000]
+test_1000 = dataset.noisy_test_ds[:1000]
+y = datasetwlabel.testlabels
 
-ae_encoding = ae_reload.encoder(dataset)
+ae_encoding = ae_reload.encoder(test_1000)
 
 tsne_result = tsne.fit_transform(ae_encoding)
 
