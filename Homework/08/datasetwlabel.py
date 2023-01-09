@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 # (img_train, _), (img_test, _) = tf.keras.datasets.mnist.load_data()
 
 train_ds, test_ds = tfds.load('mnist', split=['train', 'test'], as_supervised=True)
-# print(f"train_ds: {train_ds}") # shape=(28, 28, 1)
-# print(f"test_ds: {test_ds}") # shape=(28, 28, 1)
+# print(f"train_ds: {train_ds}") # shape=(28, 28, 1), 1)
+# print(f"test_ds: {test_ds}") # shape=((28, 28, 1), 1)
 
 # Introduce a hyperparameter to control how noisy your data will be
 mean = 0.5
@@ -28,7 +28,7 @@ def preprocess(dataset):
     # print(f"after dimension expansion: {dataset}")
 
     # get img shape before adding noise to image
-    for img, _ in dataset.take(1):
+    for img, _, _ in dataset.take(1):
         img_shape = img.shape
 
     noise_factor = 0.5
@@ -48,18 +48,19 @@ def preprocess(dataset):
 
     # take label info to new dataset
 
-    labels = dataset.map(lambda img,target_img,label: (label))
+    labels = dataset.map(lambda _,__,label: (label))
 
     # remove label info from main dataset
 
-    dataset = dataset.map(lambda img,target_img,label:(img,target_img))
+    dataset = dataset.map(lambda img,target_img,_:(img,target_img))
 
     dataset = dataset.prefetch(tf.data.AUTOTUNE)
 
     return dataset, labels
 
-noisy_train_ds, trainlabels = preprocess(train_ds) # shape=(None, 28, 28, 1, 1)
-noisy_test_ds, testlabels = preprocess(test_ds) # shape=(None, 28, 28, 1, 1)
+noisy_train_ds, trainlabels = preprocess(train_ds) # shape=(None, 28, 28, 1), (None, 28, 28, 1), (None)
+# print(noisy_train_ds, trainlabels) 
+noisy_test_ds, testlabels = preprocess(test_ds) # shape=(None, 28, 28, 1), (None, 28, 28, 1), (None)
 
 # Check the shape
 # for noisy, original in noisy_train_ds.take(1):
