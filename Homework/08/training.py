@@ -28,27 +28,7 @@ history = ae.fit(dataset.noisy_train_ds,
                 epochs=epochs, 
                 callbacks=[logging_callback])
 
-tsne = TSNE(n_components=2)
-
-dataset = dataset.noisy_test_ds[:1000]
-
-ae_encoding = ae.encoder(dataset)
-
-tsne_result = tsne.fit_transform(ae_encoding)
-
-# Plot the result of our TSNE with the label color coded
-tsne_result_df = pd.DataFrame({'tsne_1': tsne_result[:,0], 'tsne_2': tsne_result[:,1], 'label': y[:1000]})
-
-plt.figure(figsize=(10,8))
-sns.scatterplot(x='tsne_1', y='tsne_2', hue='label', data=tsne_result_df)
-plt.title("t-SNE with mnist_784")
-plt.savefig("Homework/08/plot/t-sne_mnist784")
-plt.show()
-
-
-
-
-
+ae.save('my_ae')
 
 # plotting
 #plt.plot(history.history["loss"])
