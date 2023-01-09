@@ -4,9 +4,13 @@ import model
 import matplotlib.pyplot as plt
 import datetime as datetime
 from pathlib import Path
+<<<<<<< HEAD
 from sklearn.manifold import TSNE
 import pandas as pd
 import seaborn as sns
+=======
+#from sklearn.manifold import TSNE
+>>>>>>> 5409687c7903276c2f543e72a1bd5fff4b096191
 
 # Initiate epochs and learning rate as global variables
 epochs = 1
@@ -30,6 +34,7 @@ history = ae.fit(dataset.noisy_train_ds,
                 epochs=epochs, 
                 callbacks=[logging_callback])
 
+<<<<<<< HEAD
 ## trying out tsne here
 tsne = TSNE(n_components=2)
 
@@ -50,6 +55,17 @@ plt.savefig("Homework/08/plot/t-sne_w_ae")
 plt.show()
 
 tf.keras.models.save_model(ae, f"Homework/08/my_ae")
+=======
+
+
+# save configs (e.g. hyperparameters) of your settings
+hw_directory = str(Path(__file__).parents[0])
+model_folder = 'my_model08'
+
+dir = hw_directory + '/' + model_folder
+
+ae.save(dir)
+>>>>>>> 5409687c7903276c2f543e72a1bd5fff4b096191
 
 # plotting
 #plt.plot(history.history["loss"])
