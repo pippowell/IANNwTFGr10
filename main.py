@@ -11,6 +11,6 @@ def print_hi(name):
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('Did you click the general play button and not run the specific code you are testing? :)')
+    print_hi('PyCharm')
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
