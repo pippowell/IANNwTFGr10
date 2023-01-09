@@ -33,7 +33,7 @@ def preprocess(dataset):
     # take label info to new dataset
     labels = dataset.map(lambda _, __, label: (label))
     noisy_img = dataset.map(lambda img, _, __: (img))
-    target_img = dataset.map(lambda _, target_img, __: target_img)
+    # target_img = dataset.map(lambda _, target_img, __: target_img)
 
     # remove label info from main dataset
     dataset = dataset.map(lambda img, target_img, _:(img, target_img))
@@ -44,9 +44,6 @@ def preprocess(dataset):
 
 noisy_train_ds, labels_train, noisy_img_train = preprocess(train_ds) # shape=(None, 28, 28, 1), (None, 28, 28, 1), (None)
 noisy_test_ds, labels_test, noisy_img_test = preprocess(test_ds) # shape=(None, 28, 28, 1), (None, 28, 28, 1), (None)
-
-# noisy_img_train, target_img_train, labels_train = preprocess(train_ds)
-# noisy_img_test, target_img_test, labels_test = preprocess(train_ds)
 
 # to visualize the input and noisy target image
 # Get the first element in the dataset
