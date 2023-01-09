@@ -5,15 +5,17 @@ import matplotlib.pyplot as plt
 import datetime as datetime
 from pathlib import Path
 from sklearn.manifold import TSNE
+import pandas as pd
+import seaborn as sns
 
 # Initiate epochs and learning rate as global variables
-epochs = 2
-lr = 1e-3
+epochs = 1
+lr = 0.99
 
 ae = model.autoencoder(vae=False)
 vae = model.autoencoder(vae=True)
 
-loss = tf.keras.losses.MeanSquaredError() # tf.keras.losses.BinaryCrossentropy()
+loss = tf.keras.losses.MeanSquaredError()
 opti = tf.keras.optimizers.Adam(learning_rate=lr)
 
 # save logs with Tensorboard
@@ -28,7 +30,26 @@ history = ae.fit(dataset.noisy_train_ds,
                 epochs=epochs, 
                 callbacks=[logging_callback])
 
-ae.save(f"Homework/08/my_ae")
+
+tsne = TSNE(n_components=2)
+
+# test_1000 = dataset.noisy_img_test[:1000]
+y = dataset.labels_test
+
+ae_encoding = ae.encoder(dataset.noisy_img_test)
+
+tsne_result = tsne.fit_transform(ae_encoding)
+
+# Plot the result of our TSNE with the label color coded
+tsne_result_df = pd.DataFrame({'tsne_1': tsne_result[:,0], 'tsne_2': tsne_result[:,1], 'label': y[:1000]})
+
+plt.figure(figsize=(10,8))
+sns.scatterplot(x='tsne_1', y='tsne_2', hue='label', data=tsne_result_df)
+plt.title("t-SNE with ae")
+plt.savefig("Homework/08/plot/t-sne_w_ae")
+plt.show()
+
+tf.keras.models.save_model(ae, f"Homework/08/my_ae")
 
 # plotting
 #plt.plot(history.history["loss"])
