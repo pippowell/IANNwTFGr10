@@ -4,7 +4,7 @@ import model
 import matplotlib.pyplot as plt
 import datetime as datetime
 from pathlib import Path
-from sklearn.manifold import TSNE
+#from sklearn.manifold import TSNE
 
 # Initiate epochs and learning rate as global variables
 epochs = 2
@@ -28,7 +28,15 @@ history = ae.fit(dataset.noisy_train_ds,
                 epochs=epochs, 
                 callbacks=[logging_callback])
 
-ae.save(f"Homework/08/my_ae")
+
+
+# save configs (e.g. hyperparameters) of your settings
+hw_directory = str(Path(__file__).parents[0])
+model_folder = 'my_model08'
+
+dir = hw_directory + '/' + model_folder
+
+ae.save(dir)
 
 # plotting
 #plt.plot(history.history["loss"])
