@@ -12,8 +12,8 @@ batchsize = 32
 def preprocess(dataset):
 
     # Normalize the images and make sure that you have sensible dimensions
-    dataset = dataset.map(lambda img, label: (tf.cast(img, tf.float32), tf.cast(img, tf.float32),label))
-    dataset = dataset.map(lambda img, target_img, label: ((img / 128.) - 1., (target_img / 128.) - 1,label)) # shape=(28, 28, 1)
+    dataset = dataset.map(lambda img, label: (tf.cast(img, tf.float32), tf.cast(img, tf.float32), label))
+    dataset = dataset.map(lambda img, target_img, label: ((img / 128.) - 1., (target_img / 128.) - 1, label)) # shape=(28, 28, 1)
 
     # get img shape before adding noise to image
     for img, _, _ in dataset.take(1):
