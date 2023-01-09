@@ -5,14 +5,12 @@ from sklearn.manifold import TSNE
 import pandas as pd
 import seaborn as sns
 
-
-
 ae_reload = tf.keras.models.load_model('Homework/08/my_ae')
 
 tsne = TSNE(n_components=2)
 
-test_1000 = dataset.noisy_test_ds[:1000]
-y = dataset.testlabels
+test_1000 = dataset.noisy_img_train[:1000]
+y = dataset.labels_test
 
 ae_encoding = ae_reload.encoder(test_1000)
 
