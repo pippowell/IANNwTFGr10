@@ -10,6 +10,7 @@ class encoder(tf.keras.Model):
     def __init__(self, embedding=embedding, vae=False):
         super(encoder, self).__init__()
 
+        # Alternative: 
         # convolutional layers with stride 1 followed by a pooling layer
         # self.convlayer1 = tf.keras.layers.Conv2D(filters=48, kernel_size=3, padding='same', activation='relu', strides=1)
         # self.maxpool1 = tf.keras.layers.MaxPool2D(pool_size=(2,2), padding='same')
@@ -25,8 +26,6 @@ class encoder(tf.keras.Model):
 
         # flatten the feature maps and use a dense layer to produce an embedding of a certain size - in our case: 10
         self.flatten =  tf.keras.layers.Flatten() # shape=(2352,1)
-
-        
 
         if vae==True:
             self.z_mean = zmean
@@ -94,9 +93,7 @@ class encoder(tf.keras.Model):
     def __call__(self, input):
         x = self.convlayer1(input)
         x = self.batchnorm1(x)
-        # x = self.maxpool1(x)
         x = self.convlayer2(x)
-        # x = self.maxpool2(x)
         x = self.flatten(x)
 
         if self.vae==True:
@@ -131,18 +128,10 @@ class decoder(tf.keras.Model):
 
             x = self.restore_di_layer(input) # shape=(bs,784)
             x = self.reshape_layer(x) # shape=(bs,28,28,1)
-            # print(f"done until reshape_layer: {x}")
-
-            x = self.convTlayer1(x) # shape=(ns,28,28,48)
-            # print(f"done until convTlayer1: {x}")
-
-            x = self.convTlayer2(x) # shape=(ns,28,28,48)
-            # print(f"done until convTlayer2: {x}")
-
+            x = self.convTlayer1(x) # shape=(bs,28,28,48)
+            x = self.convTlayer2(x) # shape=(bs,28,28,48)
             x = self.batchnorm1(x)
-
             x = self.output_layer(x) # (bs,28,28,1)
-            # print(f"done until outputlayer: {x}")
 
             return x
 
@@ -160,5 +149,3 @@ class autoencoder(tf.keras.Model):
         decoded = self.decoder(encoded) 
         
         return decoded
-    
-# testmodel = autoencoder(vae=True)
